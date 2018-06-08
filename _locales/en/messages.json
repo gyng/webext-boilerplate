@@ -1,0 +1,11 @@
+{
+  "extensionName": {
+    "message": "webext-boilerplate",
+    "description": "Name of the extension."
+  },
+
+  "extensionDescription": {
+    "message": "Change me!",
+    "description": "Description of the add-on."
+  }
+}
