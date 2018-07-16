@@ -15,5 +15,8 @@
     "no-else-return": 0
   },
   "globals": {
+    "Messaging": false,
+    "options": false,
+    "OptionsManagement": false
   }
 }

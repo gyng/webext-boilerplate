@@ -10,6 +10,15 @@ It includes a basic setup for:
 * Testing (jest)
 * Linting (eslint)
 * Building (web-ext)
+* Options management across content and background scripts (`src/options`)
+* Chrome polyfill for compatiability across Firefox and Chrome (`src/chrome-polyfill.js`)
+* A messaging setup between background script, content script, and options page (`src/background/core/messaging.js`)
+
+Files are deliberatly kept as plain Javascript files as this makes it easier for addon reviewers to review. It also works better with tooling. This is something to reconsider: maybe TypeScript might work better since largish extensions tend to get unwieldly.
+
+### Options
+
+Define your options in `src/background/options.js`, and then create an HTML element in `src/options/options.html` with the `id` attribute set to the option name as defined in `options.js`. The option should be automatically bound once this is done.
 
 ## Clone
 
@@ -24,7 +33,7 @@ git remote add origin <YOUR_ORIGIN>
 
 ```
 yarn install
-yarn d
+yarn d           # Wait a while for it to load the extension
 yarn d:noenv     # For use with Windows
 ```
 

@@ -7,5 +7,37 @@
   "extensionDescription": {
     "message": "Change me!",
     "description": "Description of the add-on."
+  },
+
+  "oMoreOptions": {
+    "message": "More Options"
+  },
+
+  "oRestoreDefaults": {
+    "message": "Restore Defaults"
+  },
+
+  "oExportSettings": {
+    "message": "Export Settings"
+  },
+
+  "oImportSettings": {
+    "message": "Import Settings"
+  },
+
+  "oLastSavedAt": {
+    "message": "Last saved at: "
+  },
+
+  "oLastSavedAtNever": {
+    "message": "never"
+  },
+
+  "oFoo": {
+    "message": "Foo"
+  },
+
+  "oBar": {
+    "message": "Bar"
   }
 }

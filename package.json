@@ -5,7 +5,7 @@
   "scripts": {
     "build": "env -u WEB_EXT_API_KEY -u WEB_EXT_API_SECRET web-ext build --overwrite-dest -i test docs yarn.lock",
     "build:firefox:submit": "web-ext sign",
-    "d": "env -u WEB_EXT_API_KEY -u WEB_EXT_API_SECRET web-ext run",
+    "d": "env -u WEB_EXT_API_KEY -u WEB_EXT_API_SECRET web-ext run --verbose",
     "d:noenv": "web-ext run",
     "lint": "env -u WEB_EXT_API_KEY -u WEB_EXT_API_SECRET web-ext lint && eslint src test",
     "lint:fix": "eslint --fix src test",
@@ -26,7 +26,7 @@
     "jest": "^21.2.1",
     "jest-webextension-mock": "^2.1.0",
     "prettier": "^1.7.4",
-    "web-ext": "^2.0.0"
+    "web-ext": "^2.7.0"
   },
   "jest": {
     "setupFiles": [

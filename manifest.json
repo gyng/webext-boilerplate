@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "0.0.3",
+  "version": "0.0.1",
   "default_locale": "en",
 
   "developer": {
@@ -13,7 +13,12 @@
   "homepage_url": "https://github.com/gyng/webext-boilerplate",
 
   "background": {
-    "scripts": ["src/background/index.js"]
+    "scripts": [
+      "src/chrome-polyfill.js",
+      "src/background/core/messaging.js",
+      "src/background/core/options.js",
+      "src/background/index.js"
+    ]
   },
 
   "content_scripts": [
@@ -23,5 +28,17 @@
     }
   ],
 
-  "permissions": ["<all_urls>", "activeTab"]
+  "options_ui": {
+    "browser_style": true,
+    "chrome_style": true,
+    "page": "src/options/options.html"
+  },
+
+  "icons": {
+    "48": "icons/ic_archive_black_48px.png",
+    "96": "icons/ic_archive_black_96px.png",
+    "128": "icons/ic_archive_black_128px.png"
+  },
+
+  "permissions": ["<all_urls>", "activeTab", "storage"]
 }
