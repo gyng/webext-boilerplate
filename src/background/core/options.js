@@ -6,18 +6,20 @@ const T = {
 
 let options = {};
 
+const OPTION_KEYS = [
+  { name: "foo", type: T.BOOL, default: false },
+  {
+    name: "bar",
+    type: T.VALUE,
+    onSave: v => v.trim() || ".",
+    default: "baz"
+  }
+];
+
 const OptionsManagement = {
   OPTION_TYPES: T, // re-export
 
-  OPTION_KEYS: [
-    { name: "foo", type: T.BOOL, default: false },
-    {
-      name: "bar",
-      type: T.VALUE,
-      onSave: v => v.trim() || ".",
-      default: "baz"
-    }
-  ],
+  OPTION_KEYS,
 
   getKeys: () =>
     OptionsManagement.OPTION_KEYS.reduce(
