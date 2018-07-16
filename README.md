@@ -1,4 +1,4 @@
-# webext-boilerpalte
+# webext-boilerplate
 
 [![Build Status](https://travis-ci.org/gyng/webext-boilerplate.svg?branch=master)](https://travis-ci.org/gyng/webext-boilerplate)
 
