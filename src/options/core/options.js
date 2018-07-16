@@ -27,6 +27,8 @@ const saveOptions = e => {
       return Object.assign(acc, { [val.name]: optionValue });
     }, {});
 
+    debugOptions = toSave;
+
     browser.storage.local.set(toSave).then(() => {
       browser.runtime.getBackgroundPage().then(w => {
         w.reset();

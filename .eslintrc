@@ -17,6 +17,7 @@
   "globals": {
     "Messaging": false,
     "options": false,
-    "OptionsManagement": false
+    "OptionsManagement": false,
+    "T": false
   }
 }
