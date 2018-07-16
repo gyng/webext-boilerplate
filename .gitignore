@@ -4,3 +4,4 @@ node_modules
 web-ext-artifacts
 yarn-error.log
 thumbs.db
+src/_bundle

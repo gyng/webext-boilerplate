@@ -13,18 +13,13 @@
   "homepage_url": "https://github.com/gyng/webext-boilerplate",
 
   "background": {
-    "scripts": [
-      "src/chrome-polyfill.js",
-      "src/background/core/messaging.js",
-      "src/background/core/options.js",
-      "src/background/index.js"
-    ]
+    "page": "src/background/loader.html"
   },
 
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["src/content/index.js"]
+      "js": ["bundle/content/index.js"]
     }
   ],
 
