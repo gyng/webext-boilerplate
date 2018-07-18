@@ -1,5 +1,5 @@
 import React from "react";
-import { exportSettings } from "@src/core/options/importExport";
+import { exportSettings } from "@src/core/options/ui";
 import Button from "@src/core/components/Button";
 import { schema } from "@src/schema";
 
@@ -21,7 +21,7 @@ export default class ExportSettingsButton extends React.Component<
       <div>
         <Button
           onClick={() => {
-            exportSettings(options => this.setState({ options }));
+            exportSettings.then(options => this.setState({ options }));
           }}
           style={{ marginLeft: "8px" }}
         >

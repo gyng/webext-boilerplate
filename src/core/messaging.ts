@@ -31,7 +31,7 @@ export interface IMessageOptionsSchema extends IMessage {
 
 export type RootMessage = IMessageOptionsSchema;
 
-export const actions = {
+export const Actions = {
   optionsUpdate: (newValues: Partial<{ [k: string]: any }>) => {
     return browser.runtime.sendMessage({
       type: MessageType.OPTIONS_UPDATE,
@@ -55,7 +55,7 @@ export const actions = {
   }
 };
 
-export const emit = {
+export const Emit = {
   optionsUpdated: () =>
     loadOptions.then(options => {
       browser.runtime.sendMessage({
@@ -78,13 +78,13 @@ const optionsListener: Listener = (requestObj, sender, sendResponse) => {
     case MessageType.OPTIONS_UPDATE:
       browser.storage.local
         .set(request.body.newValues)
-        .then(emit.optionsUpdated);
+        .then(Emit.optionsUpdated);
       break; // see if this breawks instead of return true
     case MessageType.OPTIONS_GET:
       browser.storage.local.get(getKeys()).then(val => sendResponse(val));
       return true;
     case MessageType.OPTIONS_RESET:
-      browser.storage.local.clear().then(emit.optionsUpdated);
+      browser.storage.local.clear().then(Emit.optionsUpdated);
       break;
     case MessageType.RELOAD:
       reset();

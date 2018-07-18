@@ -1,17 +1,15 @@
-import {  actions } from "@src/core/messaging";
+import {  Actions } from "@src/core/messaging";
 
-export const exportSettings = (cb: (body: { [k: string]: any }) => void) => {
-  actions.optionsGet().then(body => cb(body));
-}
+export const exportSettings = Actions.optionsGet();
 
 export const importSettings = () => {
   const load = (w: Window) => {
-    actions.optionsGet().then(_schema => {
+    Actions.optionsGet().then(_schema => {
       const json = w.prompt("Paste settings to import");
       try {
         if (json) {
           const imported = JSON.parse(json);
-          actions.optionsUpdate(imported);
+          Actions.optionsUpdate(imported);
           w.alert("Settings loaded.");
         }
       } catch (e) {
@@ -32,7 +30,7 @@ export const resetSettings = () => {
   const resetFn = (win: Window) => {
     const reset = win.confirm("Reset settings to defaults?");
     if (reset) {
-      actions.optionsReset();
+      Actions.optionsReset();
     }
   }
   

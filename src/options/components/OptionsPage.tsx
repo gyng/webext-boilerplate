@@ -4,8 +4,8 @@ import { schema } from "@src/schema";
 import {
   importSettings,
   resetSettings
-} from "@src/core/options/importExport";
-import { actions, IMessage, MessageType } from "@src/core/messaging";
+} from "@src/core/options/ui";
+import { Actions, IMessage, MessageType } from "@src/core/messaging";
 import Button from "@src/core/components/Button";
 import ExportSettingsButton from "@src/core/components/ExportSettingsButton";
 const styles = require("@src/core/components/styles.scss");
@@ -34,7 +34,7 @@ export class Checkbox extends React.Component<IOptionControl, {}> {
             id={id}
             checked={checked as boolean}
             onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
-              actions.optionsUpdate({ [id]: evt.target.checked });
+              Actions.optionsUpdate({ [id]: evt.target.checked });
             }}
           />
           {this.props.children}
@@ -59,7 +59,7 @@ export default class OptionsPage extends React.Component<
     super(props);
 
     this.updateState = () => {
-      actions.optionsGet().then(options => {
+      Actions.optionsGet().then(options => {
         this.setState({ options });
       });
     };
