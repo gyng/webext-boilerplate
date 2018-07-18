@@ -1,4 +1,4 @@
-import { init } from "./core/index.js";
+import { init } from "./core/index";
 
 init();
 

@@ -1,11 +1,17 @@
-import { OPTION_KEYS, OptionType, options } from "./options.js";
-import { reset } from "./index";
+import {
+  OptionSchema,
+  OptionType,
+  loadOptions,
+  getKeys
+} from "@src/background/core/options";
+import { reset } from "@src/background/core";
 
 export enum MessageType {
-  OPTIONS = "OPTIONS",
+  OPTIONS_GET = "OPTIONS_GET",
   OPTIONS_SCHEMA = "OPTIONS_SCHEMA",
+  OPTIONS_UPDATE = "OPTIONS_UPDATE",
+  OPTIONS_UPDATED = "OPTIONS_UPDATED",
   RELOAD = "RELOAD",
-  FOO = "FOO"
 }
 
 export interface IMessage {
@@ -15,60 +21,75 @@ export interface IMessage {
   };
 }
 
-export interface IMessageOptions extends IMessage {
-  type: MessageType.OPTIONS,
-  body: typeof options
-}
-
 export interface IMessageOptionsSchema extends IMessage {
-  type: MessageType.OPTIONS_SCHEMA,
+  type: MessageType.OPTIONS_SCHEMA;
   body: {
-    keys: typeof OPTION_KEYS,
-    types: OptionType
-  }
+    schema: typeof OptionSchema;
+    types: OptionType;
+  };
 }
 
-export type RootMessage = IMessageOptions | IMessageOptionsSchema;
+export type RootMessage = IMessageOptionsSchema;
 
-export const emit = {
-  foo: (value: any) => {
-    browser.runtime.sendMessage({
-      type: MessageType.FOO,
-      body: { value }
+export const actions = {
+  optionsUpdate: (newValues: Partial<{ [k: string]: any }>) => {
+    return browser.runtime.sendMessage({
+      type: MessageType.OPTIONS_UPDATE,
+      body: {
+        newValues
+      }
     });
+  },
+  optionsGet: () => {
+    return browser.runtime.sendMessage({
+      type: MessageType.OPTIONS_GET
+    });
+  },
+  optionKeysGet: () => {
+    return () => Object.keys(OptionSchema);
   }
 };
 
-const listener = (
+export const emit = {
+  optionsUpdated: () =>
+    loadOptions.then(options => {
+      browser.runtime.sendMessage({
+        type: MessageType.OPTIONS_UPDATED,
+        body: { options }
+      });
+    })
+};
+
+export type Listener = (
   requestObj: object,
   sender: browser.runtime.MessageSender,
   sendResponse: any
-) => {
+) => boolean | void;
+
+const optionsListener: Listener = (requestObj, sender, sendResponse) => {
   const request = requestObj as IMessage;
 
   switch (request.type) {
-    case MessageType.OPTIONS:
-      sendResponse({
-        type: MessageType.OPTIONS,
-        body: options
-      });
-      break;
-    case MessageType.OPTIONS_SCHEMA:
-      sendResponse({
-        type: MessageType.OPTIONS_SCHEMA,
-        body: {
-          keys: OPTION_KEYS,
-          types: OptionType
-        }
-      });
-      break;
+    case MessageType.OPTIONS_UPDATE:
+      browser.storage.local
+        .set(request.body.newValues)
+        .then(emit.optionsUpdated);
+      return true;
+    case MessageType.OPTIONS_GET:
+      browser.storage.local.get(getKeys()).then(val => sendResponse(val));
+      return true;
     case MessageType.RELOAD:
       reset();
-      break;
+      return true;
     default:
-      break; // noop
+      return true;
   }
 };
 
-export const listen = () => browser.runtime.onMessage.addListener(listener);
-export const stop = () => browser.runtime.onMessage.removeListener(listener);
+export const listen = () => {
+  browser.runtime.onMessage.addListener(optionsListener);
+};
+
+export const stop = () => {
+  browser.runtime.onMessage.removeListener(optionsListener);
+};

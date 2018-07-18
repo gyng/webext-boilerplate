@@ -1,119 +1,124 @@
-import { OPTION_KEYS, OptionType, OptionTypePrim, options } from "../../background/core/options.js";
-import { IMessage, IMessageOptionsSchema, MessageType } from "../../background/core/messaging.js";
+import {
+  OptionType,
+  OptionTypePrim
+} from "@src/background/core/options";
+import {
+  IMessageOptionsSchema,
+  MessageType
+} from "@src/background/core/messaging";
 
-let debugOptions;
-
-const ATTR_MAP: { [k in OptionType] : "checked" | "value" } = {
-  [OptionType.BOOLEAN]: "checked",
-  [OptionType.STRING]: "value"
+const getAttributeForOptionType = (type: OptionType): "checked" | "value" => {
+  const ATTR_MAP: { [k in OptionType]: "checked" | "value" } = {
+    [OptionType.BOOLEAN]: "checked",
+    [OptionType.STRING]: "value"
+  };
+  return ATTR_MAP[type];
 };
 
-const getOptionsSchema = browser.runtime
+export const getOptionsSchema = browser.runtime
   .sendMessage({ type: MessageType.OPTIONS_SCHEMA })
-  .then((res: IMessageOptionsSchema) => res.body)
+  .then((res: IMessageOptionsSchema) => res.body);
 
-const saveOptions = e => {
-  if (e) {
-    e.preventDefault();
-  }
+// export const getOptions = browser.runtime
+//   .sendMessage({ type: MessageType.OPTIONS })
+//   .then((res: IMessageOptions) => res.body);
 
-  // Zip result -> schema
-  getOptionsSchema.then(payload => {
-    // Assign to a variable so we can get a reference to it when exporting and saving to localStorage
-    const toSave: typeof options = Object.keys(payload.keys).reduce((acc, name) => {
-      const optionSchemata = payload.keys[name];
-      const el = <HTMLInputElement> document.getElementById(name);
-      if (!el) {
-        return acc;
-      }
+// export const getAllOptions = Promise.all([getOptions, getOptionsSchema]).then(values => {
+//   const [options, schema] = values;
+//   return { options, schema };
+// });
 
-      const onSave = optionSchemata.onSave || (x => x);
-      const attribute = ATTR_MAP[optionSchemata.type];
-      const attributeValue = el[attribute];
-      const optionValue: OptionTypePrim = onSave(attributeValue);
+// const saveOptions = (e?: Event) => {
+//   if (e) {
+//     e.preventDefault();
+//   }
 
-      return Object.assign(acc, { [name]: optionValue });
-    }, {});
+//   // Zip result -> schema
+//   getOptionsSchema
+//     .then(payload => {
+//       // Assign to a variable so we can get a reference to it when exporting and saving to localStorage
+//       const toSave: typeof options = Object.keys(payload.keys).reduce(
+//         (acc, name) => {
+//           const optionSchemata = payload.keys[name];
+//           const el = <HTMLInputElement>document.getElementById(name);
+//           if (!el) {
+//             return acc;
+//           }
 
-    // const toSave = schema.keys.reduce((acc, val) => {
-    //   const el = document.getElementById(val.name);
-    //   if (!el) {
-    //     return acc;
-    //   }
+//           const onSave = optionSchemata.onSave || ((x: any) => x);
+//           const attribute = getAttributeForOptionType(optionSchemata.type);
+//           const attributeValue = el[attribute];
+//           const optionValue: OptionTypePrim = onSave(attributeValue);
 
-    //   const ATTR_MAP = {
-    //     [schema.types.BOOL]: "checked",
-    //     [schema.types.VALUE]: "value"
-    //   };
-    //   const fn = val.onSave || (x => x);
-    //   const optionValue = fn(el[ATTR_MAP[val.type]]);
+//           return Object.assign(acc, { [name]: optionValue });
+//         },
+//         {}
+//       );
 
-    //   return Object.assign(acc, { [val.name]: optionValue });
-    // }, {});
+//       browser.storage.local.set(toSave).then(() => {
+//         browser.runtime
+//           .sendMessage({ type: MessageType.RELOAD })
+//           .then(() => {
+//             const lastSavedAtEl = document.querySelector("#lastSavedAt");
 
-    debugOptions = toSave;
-
-    browser.storage.local.set(toSave).then(() => {
-      browser.runtime.sendMessage({ type: MessageType.RELOAD })
-      .then(() => {
-        const lastSavedAtEl = document.querySelector("#lastSavedAt");
-
-        if (lastSavedAtEl) {
-          lastSavedAtEl.textContent = new Date().toLocaleTimeString();
-        }
-      })
-      .catch(console.error)
-      // browser.runtime.getBackgroundPage().then(w => {
-      //   w.reset();
-      // });
-    });
-  })
-  .catch(console.error);
-};
+//             if (lastSavedAtEl) {
+//               lastSavedAtEl.textContent = new Date().toLocaleTimeString();
+//             }
+//           })
+//       });
+//     })
+//     .catch(console.error);
+// };
 
 // Set UI elements' value/checked
-const restoreOptionsHandler = (result, payload) => {
-  // Zip result -> schema
-  const schemaWithValues = payload.keys.map(o =>
-    Object.assign({}, o, { value: result[o.name] })
-  );
+export const restoreOptionsHandler = (
+  loadedOptions: browser.storage.StorageObject,
+  payload: IMessageOptionsSchema["body"]
+) => {
+  const populatedOptions = Object.keys(payload.schema).map(key => ({
+    name: key,
+    value: loadedOptions[key],
+    onOptionsLoad: payload.schema[key].onLoad,
+    default: payload.schema[key].default,
+    type: payload.schema[key].type
+  }));
 
-  schemaWithValues.forEach(o => {
-    const el = document.getElementById(o.name);
+  populatedOptions.forEach(opt => {
+    const el = <HTMLInputElement>document.getElementById(opt.name);
     if (!el) {
       return;
     }
 
-    const fn = o.onOptionsLoad || (x => x);
-    const val = typeof o.value === "undefined" ? o.default : fn(o.value);
-    el[ATTR_MAP[o.type]] = val;
-  });
+    const fn = opt.onOptionsLoad || (x => x);
+    const val = typeof opt.value === "undefined" ? opt.default : fn(opt.value);
+    const attribute = getAttributeForOptionType(opt.type);
+    el.setAttribute(attribute, String(val));
 
-  debugOptions = result;
+    if (el.type === "textarea") {
+      el.innerText = String(val);
+    }
+  });
 };
 
-const restoreOptions = () => {
-  getOptionsSchema
+export const restoreOptions = () => {
+  return getOptionsSchema
     .then(payload => {
-      const keys = Object.keys(payload.keys);
+      const keys = Object.keys(payload.schema);
       browser.storage.local
         .get(keys)
-        .then(loaded => restoreOptionsHandler(loaded, payload));
+        .then(loadedOptions => restoreOptionsHandler(loadedOptions, payload));
     })
-    .catch(console.error); // eslint-disable-line
+    .catch(console.error);
 };
-
-document.addEventListener("DOMContentLoaded", restoreOptions);
 
 const resetEl = document.querySelector("#reset");
 
 if (resetEl) {
   resetEl.addEventListener("click", e => {
-    /* eslint-disable no-alert */
     e.preventDefault();
 
-    const resetFn = w => {
-      const reset = w.confirm("Reset settings to defaults?");
+    const resetFn = (win: Window) => {
+      const reset = win.confirm("Reset settings to defaults?");
 
       if (reset) {
         const lastSavedAtEl = document.querySelector("#lastSavedAt");
@@ -124,11 +129,10 @@ if (resetEl) {
           }
 
           restoreOptions();
-          w.alert("Settings have been reset to defaults.");
+          win.alert("Settings have been reset to defaults.");
         });
       }
     };
-    /* eslint-enable no-alert */
 
     // @ts-ignore
     if (browser === chrome) {
@@ -139,55 +143,21 @@ if (resetEl) {
   });
 }
 
-const setupAutosave = el => {
-  const autosaveCb = e => {
-    saveOptions(e);
-  };
+// const setupAutosaveHandler = (el: HTMLFormElement) => {
+//   const autosaveCb = (e?: Event) => {
+//     saveOptions(e);
+//   };
 
-  if (["textarea", "text", "number"].includes(el.type)) {
-    el.addEventListener("input", autosaveCb);
-  } else {
-    el.addEventListener("change", autosaveCb);
-  }
-};
+//   if (["textarea", "text", "number"].includes(el.type)) {
+//     el.addEventListener("input", autosaveCb);
+//   } else {
+//     el.addEventListener("change", autosaveCb);
+//   }
+// };
 
-["textarea", "input", "select"].forEach(type => {
-  document.querySelectorAll(type).forEach(setupAutosave);
-});
-
-const showJson = obj => {
-  const json = JSON.stringify(obj, null, 2);
-  const outputEl = document.querySelector("#export-target");
-  outputEl.style = "display: unset;";
-  outputEl.value = json;
-};
-
-document.querySelector("#settings-export").addEventListener("click", () => {
-  showJson(debugOptions);
-});
-
-const importSettings = () => {
-  const load = w => {
-    getOptionsSchema.then(schema => {
-      const json = w.prompt("Paste settings to import");
-      try {
-        if (json) {
-          const settings = JSON.parse(json);
-          restoreOptionsHandler(settings, schema);
-          w.alert("Settings loaded.");
-        }
-      } catch (e) {
-        w.alert(`Failed to load settings ${e}`);
-      }
-    });
-  };
-
-  if (browser === chrome) {
-    browser.runtime.getBackgroundPage().then(load);
-  } else {
-    load(window);
-  }
-};
-document
-  .querySelector("#settings-import")
-  .addEventListener("click", importSettings);
+// export const setupAutosave = () => {
+//   ["textarea", "input", "select"].forEach(type => {
+//     const nodeList = document.querySelectorAll(type);
+//     Array.prototype.forEach.call(nodeList, setupAutosaveHandler);
+//   });
+// };

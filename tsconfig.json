@@ -10,6 +10,10 @@
     "outDir": "./bundle/",
     "paths": {
       "@src/*": ["src/*"],
+      "@options/*": ["src/options/*"],
+      "@content/*": ["src/content/*"],
+      "@background/*": ["src/background/*"],
+      "@vendor/*": ["vendor/*"],
       "@test/*": ["test/*"]
     },
     "sourceMap": true,
@@ -19,5 +23,5 @@
     "typeRoots": ["./node_modules/@types", "./node_modules/web-ext-types"]
   },
   "include": ["./src/**/*"],
-  "exclude": ["./src/_bundle"]
+  "exclude": ["./dist"]
 }

@@ -157,7 +157,7 @@
     line-height: 1.6;
   }
 
-  div.button,
+  .button,
   button {
     border-radius: 2px;
     padding: 8px;
@@ -279,4 +279,15 @@
 
   #export-target {
     width: 100%;
+  }
+
+
+
+
+
+
+
+
+  .hiddenTextarea:invalid {
+    display: none;
   }
