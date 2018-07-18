@@ -1,17 +1,17 @@
 import {
-  OptionSchema,
-  OptionType,
   loadOptions,
   getKeys
-} from "@src/background/core/options";
-import { reset } from "@src/background/core";
+} from "@src/core/options";
+import { reset } from "@src/core";
+import { schema, OptionType } from "@src/schema";
 
 export enum MessageType {
   OPTIONS_GET = "OPTIONS_GET",
   OPTIONS_SCHEMA = "OPTIONS_SCHEMA",
   OPTIONS_UPDATE = "OPTIONS_UPDATE",
   OPTIONS_UPDATED = "OPTIONS_UPDATED",
-  RELOAD = "RELOAD",
+  OPTIONS_RESET = "OPTIONS_RESET",
+  RELOAD = "RELOAD"
 }
 
 export interface IMessage {
@@ -24,7 +24,7 @@ export interface IMessage {
 export interface IMessageOptionsSchema extends IMessage {
   type: MessageType.OPTIONS_SCHEMA;
   body: {
-    schema: typeof OptionSchema;
+    schema: typeof schema;
     types: OptionType;
   };
 }
@@ -46,7 +46,12 @@ export const actions = {
     });
   },
   optionKeysGet: () => {
-    return () => Object.keys(OptionSchema);
+    return () => Object.keys(schema);
+  },
+  optionsReset: () => {
+    return browser.runtime.sendMessage({
+      type: MessageType.OPTIONS_RESET
+    });
   }
 };
 
@@ -74,16 +79,21 @@ const optionsListener: Listener = (requestObj, sender, sendResponse) => {
       browser.storage.local
         .set(request.body.newValues)
         .then(emit.optionsUpdated);
-      return true;
+      break; // see if this breawks instead of return true
     case MessageType.OPTIONS_GET:
       browser.storage.local.get(getKeys()).then(val => sendResponse(val));
       return true;
+    case MessageType.OPTIONS_RESET:
+      browser.storage.local.clear().then(emit.optionsUpdated);
+      break;
     case MessageType.RELOAD:
       reset();
-      return true;
+      break;
     default:
-      return true;
+      break;
   }
+
+  return false;
 };
 
 export const listen = () => {

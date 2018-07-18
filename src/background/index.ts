@@ -1,4 +1,4 @@
-import { init } from "./core/index";
+import { init } from "@src/core";
 
 init();
 

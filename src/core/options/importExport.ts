@@ -1,7 +1,4 @@
-import {
-  restoreOptionsHandler
-} from "@src/options/core/options";
-import {  actions } from "@src/background/core/messaging";
+import {  actions } from "@src/core/messaging";
 
 export const exportSettings = (cb: (body: { [k: string]: any }) => void) => {
   actions.optionsGet().then(body => cb(body));
@@ -9,13 +6,12 @@ export const exportSettings = (cb: (body: { [k: string]: any }) => void) => {
 
 export const importSettings = () => {
   const load = (w: Window) => {
-    actions.optionsGet().then(schema => {
+    actions.optionsGet().then(_schema => {
       const json = w.prompt("Paste settings to import");
       try {
         if (json) {
           const imported = JSON.parse(json);
           actions.optionsUpdate(imported);
-          // restoreOptionsHandler(settings, schema);
           w.alert("Settings loaded.");
         }
       } catch (e) {
@@ -29,5 +25,21 @@ export const importSettings = () => {
     browser.runtime.getBackgroundPage().then(load);
   } else {
     load(window);
+  }
+};
+
+export const resetSettings = () => {
+  const resetFn = (win: Window) => {
+    const reset = win.confirm("Reset settings to defaults?");
+    if (reset) {
+      actions.optionsReset();
+    }
+  }
+  
+  // @ts-ignore
+  if (browser === chrome) {
+    browser.runtime.getBackgroundPage().then(resetFn);
+  } else {
+    resetFn(window);
   }
 };

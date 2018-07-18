@@ -1,59 +1,19 @@
 import * as React from "react";
 import { l10n } from "@vendor/l10n/l10n";
-import { OptionSchema } from "@src/background/core/options";
-import { importSettings, exportSettings } from "@src/options/core/importExport";
-import { actions, IMessage, MessageType } from "@src/background/core/messaging";
-const styles = require("./styles.scss");
+import { schema } from "@src/schema";
+import {
+  importSettings,
+  resetSettings
+} from "@src/core/options/importExport";
+import { actions, IMessage, MessageType } from "@src/core/messaging";
+import Button from "@src/core/components/Button";
+import ExportSettingsButton from "@src/core/components/ExportSettingsButton";
+const styles = require("@src/core/components/styles.scss");
 
 export interface IOptionControl {
   name: string;
-  options: typeof OptionSchema;
+  options: typeof schema;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-export interface IButtonProps extends React.HTMLAttributes<HTMLDivElement> {
-  children?: React.ReactNode;
-  onClick?: (e?: any) => void;
-}
-
-const Button = (props: IButtonProps) => {
-  return (
-    <div className={styles.button} onClick={props.onClick}>
-      {props.children}
-    </div>
-  );
-};
-
-export interface IExportSettingsState {
-  options?: typeof OptionSchema;
-}
-
-class ExportSettingsButton extends React.Component<{}, IExportSettingsState> {
-  public constructor(props: IExportSettingsState) {
-    super(props);
-    this.state = {};
-  }
-
-  public render() {
-    return (
-      <div>
-        <Button
-          onClick={() => {
-            exportSettings(options => this.setState({ options }));
-          }}
-          style={{ marginLeft: "8px" }}
-        >
-          __MSG_oExportSettings__
-        </Button>
-
-        <textarea
-          style={{ display: this.state.options ? "block" : "none" }}
-          spellCheck={false}
-          value={JSON.stringify(this.state.options, null, 2)}
-        />
-      </div>
-    );
-  }
 }
 
 // todo: onclick, update options
@@ -85,7 +45,7 @@ export class Checkbox extends React.Component<IOptionControl, {}> {
 }
 
 export interface IOptionsPageState {
-  options: typeof OptionSchema;
+  options: typeof schema;
 }
 
 export default class OptionsPage extends React.Component<
@@ -133,8 +93,8 @@ export default class OptionsPage extends React.Component<
 
         <h2 id="section-more-options">
           __MSG_oMoreOptions__
-          <div id="reset" className="button float-right">
-            __MSG_oRestoreDefaults__
+          <div className={styles["float-right"]}>
+            <Button onClick={resetSettings}>__MSG_oRestoreDefaults__</Button>
           </div>
         </h2>
 

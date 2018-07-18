@@ -1,4 +1,4 @@
-import * as messaging from "@src/background/core/messaging";
+import * as messaging from "@src/core/messaging";
 
 export const init = () => {
   messaging.listen();
