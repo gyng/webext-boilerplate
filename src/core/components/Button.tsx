@@ -6,7 +6,7 @@ export interface IButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   onClick?: (e?: any) => void;
 }
 
-export default (props: IButtonProps) => {
+export const Button = (props: IButtonProps) => {
   return (
     <div className={styles.button} onClick={props.onClick}>
       {props.children}

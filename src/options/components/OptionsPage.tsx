@@ -1,47 +1,16 @@
-import * as React from "react";
 import { l10n } from "@vendor/l10n/l10n";
-import { schema } from "@src/schema";
-import {
-  importSettings,
-  resetSettings
-} from "@src/core/options/ui";
+import * as React from "react";
+
+import { Button, Checkbox, ExportSettingsButton } from "@src/core/components";
 import { Actions, IMessage, MessageType } from "@src/core/messaging";
-import Button from "@src/core/components/Button";
-import ExportSettingsButton from "@src/core/components/ExportSettingsButton";
+import { importSettings, resetSettings } from "@src/core/options/ui";
+import { schema } from "@src/schema";
 const styles = require("@src/core/components/styles.scss");
 
 export interface IOptionControl {
   name: string;
   options: typeof schema;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-// todo: onclick, update options
-export class Checkbox extends React.Component<IOptionControl, {}> {
-  public render() {
-    const id = String(this.props.name);
-    const disabled = this.props.options == null;
-    let checked = this.props.options
-      ? this.props.options[this.props.name]
-      : false;
-
-    return (
-      <div>
-        <label htmlFor={id}>
-          <input
-            disabled={disabled}
-            type="checkbox"
-            id={id}
-            checked={checked as boolean}
-            onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
-              Actions.optionsUpdate({ [id]: evt.target.checked });
-            }}
-          />
-          {this.props.children}
-        </label>
-      </div>
-    );
-  }
 }
 
 export interface IOptionsPageState {
@@ -52,8 +21,8 @@ export default class OptionsPage extends React.Component<
   {},
   IOptionsPageState
 > {
-  updateState: () => void;
-  listener: (requestObj: object) => void;
+  private updateState: () => void;
+  private listener: (requestObj: object) => void;
 
   public constructor(props: {}) {
     super(props);
@@ -100,9 +69,9 @@ export default class OptionsPage extends React.Component<
 
         <div
           style={{
+            alignItems: "center",
             display: "flex",
-            justifyContent: "flex-start",
-            alignItems: "center"
+            justifyContent: "flex-start"
           }}
         >
           <Button onClick={importSettings}>__MSG_oImportSettings__</Button>

@@ -1,13 +1,14 @@
 import React from "react";
+
+import { Button } from "@src/core/components";
 import { exportSettings } from "@src/core/options/ui";
-import Button from "@src/core/components/Button";
 import { schema } from "@src/schema";
 
 export interface IExportSettingsState {
   options?: typeof schema;
 }
 
-export default class ExportSettingsButton extends React.Component<
+export class ExportSettingsButton extends React.Component<
   {},
   IExportSettingsState
 > {
