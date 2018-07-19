@@ -1,9 +1,8 @@
-import { OptionType } from "@src/schema";
 import { OptionTypePrim } from "@src/core/options";
-import { schema } from "@src/schema";
+import { OptionType } from "../../schema";
 
 // TODO: There is no contstraint between type and onSave, this can be improved
-export interface OptionKey<T> {
+export interface IOptionKey<T> {
   type: OptionType;
   onSave?: (value: any) => any;
   onLoad?: (value: any) => void;
@@ -12,24 +11,27 @@ export interface OptionKey<T> {
 
 export type OptionTypePrim = boolean | string;
 
-export type OptionsSchema = {
-  [k: string]: OptionKey<boolean> | OptionKey<string>;
-};
+export interface IOptionsSchema {
+  [k: string]: IOptionKey<boolean> | IOptionKey<string>;
+}
 
-export const getKeys = () => Object.keys(schema);
+export interface IOptions {
+  [k: string]: boolean | string;
+}
 
-export const loadOptions = browser.storage.local
-  .get(getKeys())
-  .then(loadedOptions => {
+export const getKeys = (sch: IOptionsSchema) => Object.keys(sch);
+
+export const loadOptions = (sch: IOptionsSchema) =>
+  browser.storage.local.get(getKeys(sch)).then(loadedOptions => {
     const localKeys = Object.keys(loadedOptions);
 
-    const options: { [k: string]: OptionTypePrim } = getKeys().reduce(
-      (acc, val) => Object.assign(acc, { [val]: schema[val].default }),
+    const options: { [k: string]: OptionTypePrim } = getKeys(sch).reduce(
+      (acc, val) => ({ ...acc, [val]: sch[val].default }),
       {}
     );
 
     localKeys.forEach(key => {
-      const option = schema[key];
+      const option = sch[key];
       const onLoad: ((x: any) => any) = option.onLoad || (x => x);
       const value = onLoad(loadedOptions[key]);
       if (typeof value !== "undefined") {

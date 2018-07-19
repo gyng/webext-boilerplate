@@ -1,9 +1,11 @@
-import {
-  loadOptions,
-  getKeys
-} from "@src/core/options";
 import { reset } from "@src/core";
-import { schema, OptionType } from "@src/schema";
+import {
+  getKeys,
+  IOptions,
+  IOptionsSchema,
+  loadOptions
+} from "@src/core/options";
+import { OptionType, schema } from "@src/schema";
 
 export enum MessageType {
   OPTIONS_GET = "OPTIONS_GET",
@@ -24,7 +26,7 @@ export interface IMessage {
 export interface IMessageOptionsSchema extends IMessage {
   type: MessageType.OPTIONS_SCHEMA;
   body: {
-    schema: typeof schema;
+    schema: IOptionsSchema;
     types: OptionType;
   };
 }
@@ -32,35 +34,38 @@ export interface IMessageOptionsSchema extends IMessage {
 export type RootMessage = IMessageOptionsSchema;
 
 export const Actions = {
-  optionsUpdate: (newValues: Partial<{ [k: string]: any }>) => {
-    return browser.runtime.sendMessage({
-      type: MessageType.OPTIONS_UPDATE,
-      body: {
-        newValues
-      }
-    });
+  optionKeysGet: (sch = schema) => {
+    return () => Object.keys(sch);
   },
-  optionsGet: () => {
+  optionsGet: (sch = schema) => {
     return browser.runtime.sendMessage({
+      body: {
+        schema: sch
+      },
       type: MessageType.OPTIONS_GET
     });
-  },
-  optionKeysGet: () => {
-    return () => Object.keys(schema);
   },
   optionsReset: () => {
     return browser.runtime.sendMessage({
       type: MessageType.OPTIONS_RESET
+    });
+  },
+  optionsUpdate: (newValues: IOptions) => {
+    return browser.runtime.sendMessage({
+      body: {
+        newValues
+      },
+      type: MessageType.OPTIONS_UPDATE
     });
   }
 };
 
 export const Emit = {
   optionsUpdated: () =>
-    loadOptions.then(options => {
+    loadOptions(schema).then(options => {
       browser.runtime.sendMessage({
-        type: MessageType.OPTIONS_UPDATED,
-        body: { options }
+        body: { options },
+        type: MessageType.OPTIONS_UPDATED
       });
     })
 };
@@ -81,7 +86,9 @@ const optionsListener: Listener = (requestObj, sender, sendResponse) => {
         .then(Emit.optionsUpdated);
       break; // see if this breawks instead of return true
     case MessageType.OPTIONS_GET:
-      browser.storage.local.get(getKeys()).then(val => sendResponse(val));
+      browser.storage.local
+        .get(getKeys(request.body.schema))
+        .then(val => sendResponse(val));
       return true;
     case MessageType.OPTIONS_RESET:
       browser.storage.local.clear().then(Emit.optionsUpdated);

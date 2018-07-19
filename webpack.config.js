@@ -8,7 +8,10 @@ module.exports = {
   context: path.resolve(__dirname),
 
   // This has to be source-map as webexts cannot eval due to CSP
-  devtool: "inline-source-map",
+  devtool:
+    process.env.NODE_ENV === "production"
+      ? "none"
+      : "inline-source-map",
 
   target: "web",
 

@@ -22,6 +22,6 @@
     "pretty": true,
     "typeRoots": ["./node_modules/@types", "./node_modules/web-ext-types"]
   },
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*", "./test/**/*"],
   "exclude": ["./dist"]
 }

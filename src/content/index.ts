@@ -18,8 +18,10 @@
 
       const options = response.body;
 
-      console.log("Hello from the content script!"); // eslint-disable-line
-      console.log("Options: ", options); // eslint-disable-line
+      // tslint:disable-next-line:no-console
+      console.log("Hello from the content script!");
+      // tslint:disable-next-line:no-console
+      console.log("Options: ", options);
     }
   );
 })();

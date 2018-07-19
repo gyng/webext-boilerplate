@@ -1,10 +1,10 @@
-import {  Actions } from "@src/core/messaging";
+import { Actions } from "@src/core/messaging";
 
 export const exportSettings = Actions.optionsGet();
 
 export const importSettings = () => {
   const load = (w: Window) => {
-    Actions.optionsGet().then(_schema => {
+    Actions.optionsGet().then(schema => {
       const json = w.prompt("Paste settings to import");
       try {
         if (json) {
@@ -32,8 +32,8 @@ export const resetSettings = () => {
     if (reset) {
       Actions.optionsReset();
     }
-  }
-  
+  };
+
   // @ts-ignore
   if (browser === chrome) {
     browser.runtime.getBackgroundPage().then(resetFn);

@@ -1,15 +1,15 @@
-import { OptionsSchema } from "@src/core/options";
+import { IOptionsSchema } from "@src/core/options";
 
 export enum OptionType {
   BOOLEAN = "BOOLEAN",
   STRING = "STRING"
 }
 
-export const schema: OptionsSchema = {
-  foo: { type: OptionType.BOOLEAN, default: false },
+export const schema: IOptionsSchema = {
   bar: {
-    type: OptionType.STRING,
+    default: "baz",
     onSave: (v: string) => v.trim() || ".",
-    default: "baz"
-  }
+    type: OptionType.STRING
+  },
+  foo: { type: OptionType.BOOLEAN, default: false }
 };
