@@ -5,11 +5,17 @@ export enum OptionType {
   STRING = "STRING"
 }
 
+// TODO: Either change type to select/text or remove it
 export const schema: IOptionsSchema = {
   bar: {
     default: "baz",
     onSave: (v: string) => v.trim() || ".",
     type: OptionType.STRING
   },
-  foo: { type: OptionType.BOOLEAN, default: false }
+  baz: {
+    default: "a",
+    type: OptionType.STRING
+  },
+  foo: { type: OptionType.BOOLEAN, default: true },
+  qix: { type: OptionType.STRING, default: "hello" }
 };

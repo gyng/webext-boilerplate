@@ -1,3 +1,1 @@
-export * from "./Button";
-export * from "./Checkbox";
-export * from "./ExportSettingsButton";
+export * from "@src/core/components/SettingsSection";

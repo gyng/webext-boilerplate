@@ -4,7 +4,7 @@ export enum BROWSERS {
   UNKNOWN = "UNKNOWN"
 }
 
-export const getBrowser = () => {
+export const getBrowser: () => Promise<BROWSERS> = () => {
   // If we don't have browser.runtime.getBrowserInfo, assume it's Chrome
   // Big assumption, but browser.runtime.getBrowserInfo is not well supported
   if (!browser.runtime.getBrowserInfo) {

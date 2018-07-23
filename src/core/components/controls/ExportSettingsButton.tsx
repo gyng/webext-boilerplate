@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button } from "@src/core/components";
+import { Button } from "@src/core/components/controls";
 import { IOptions } from "@src/core/options";
 import { exportSettings } from "@src/core/options/ui";
 
@@ -19,7 +19,9 @@ export class ExportSettingsButton extends React.Component<
 
   public render() {
     return (
-      <div>
+      <div
+        style={{ display: "flex", flexDirection: "column", marginLeft: "8px" }}
+      >
         <Button
           onClick={() => {
             exportSettings.then(options => this.setState({ options }));
@@ -30,9 +32,12 @@ export class ExportSettingsButton extends React.Component<
         </Button>
 
         <textarea
-          style={{ display: this.state.options ? "block" : "none" }}
+          style={{
+            display: this.state.options ? "block" : "none",
+            fontFamily: "monospace"
+          }}
           spellCheck={false}
-          value={JSON.stringify(this.state.options, null, 2)}
+          value={JSON.stringify(this.state.options, null, 2) || ""}
         />
       </div>
     );

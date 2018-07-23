@@ -25,9 +25,17 @@ export const CoreActions = {
     return () => Object.keys(sch);
   },
   optionsGet: (sch = schema) => {
+    const keys = getKeys(sch);
+
+    // Need to fill out options in storage with defaults if the key is undefined
+    const defaults: IOptions = keys.reduce(
+      (acc, k) => ({ ...acc, [k]: sch[k].default }),
+      {}
+    );
+
     return browser.storage.local
-      .get(getKeys(sch))
-      .then(opts => opts as IOptions);
+      .get(keys)
+      .then(opts => ({ ...defaults, ...(opts as IOptions) }));
   },
   optionsReset: () => {
     return browser.runtime.sendMessage({
@@ -65,6 +73,13 @@ const optionsListener: Listener = (requestObj, sender) => {
 
   switch (request.type) {
     case CoreMessageType.OPTIONS_UPDATE:
+      Object.keys(request.body.newValues).forEach(key => {
+        if (!Object.keys(schema).includes(key)) {
+          // tslint:disable-next-line
+          console.warn(`Setting option "${key}", but it is not in the schema!`);
+        }
+      });
+
       return browser.storage.local
         .set(request.body.newValues)
         .then(Emit.optionsUpdated);

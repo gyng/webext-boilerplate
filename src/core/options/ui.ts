@@ -1,3 +1,4 @@
+import { BROWSERS, getBrowser } from "@src/core/browser-detector";
 import { CoreActions } from "@src/core/messaging";
 
 export const exportSettings = CoreActions.optionsGet();
@@ -18,12 +19,13 @@ export const importSettings = () => {
     });
   };
 
-  // @ts-ignore
-  if (browser === chrome) {
-    browser.runtime.getBackgroundPage().then(load);
-  } else {
-    load(window);
-  }
+  getBrowser().then(currentBrowser => {
+    if (currentBrowser === BROWSERS.CHROME) {
+      browser.runtime.getBackgroundPage().then(load);
+    } else {
+      load(window);
+    }
+  });
 };
 
 export const resetSettings = () => {
@@ -34,10 +36,11 @@ export const resetSettings = () => {
     }
   };
 
-  // @ts-ignore
-  if (browser === chrome) {
-    browser.runtime.getBackgroundPage().then(resetFn);
-  } else {
-    resetFn(window);
-  }
+  getBrowser().then(currentBrowser => {
+    if (currentBrowser === BROWSERS.CHROME) {
+      browser.runtime.getBackgroundPage().then(resetFn);
+    } else {
+      resetFn(window);
+    }
+  });
 };

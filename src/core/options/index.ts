@@ -1,5 +1,5 @@
 import { OptionTypePrim } from "@src/core/options";
-import { OptionType } from "../../schema";
+import { OptionType } from "@src/schema";
 
 // TODO: There is no contstraint between type and onSave, this can be improved
 export interface IOptionKey<T> {

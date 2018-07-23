@@ -13,5 +13,8 @@
     "no-submodule-imports": false,
     "no-var-requires": false,
     "prettier": true
+  },
+  "linterOptions": {
+    "exclude": ["vendor"]
   }
 }

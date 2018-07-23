@@ -1,5 +1,5 @@
 import React from "react";
-const styles = require("./styles.scss");
+const styles = require("../photon.scss");
 
 export interface IButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
@@ -8,7 +8,7 @@ export interface IButtonProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const Button = (props: IButtonProps) => {
   return (
-    <div className={styles.button} onClick={props.onClick}>
+    <div {...props} className={styles.button} onClick={props.onClick}>
       {props.children}
     </div>
   );
