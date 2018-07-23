@@ -3,5 +3,6 @@ node_js:
   - "10.7.0"
 cache: yarn
 script:
+  - yarn build:prod
   - yarn lint
   - yarn test
