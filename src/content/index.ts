@@ -1,27 +1,14 @@
-// Unfortunately you cannot import any TS types in here because content scripts
-// cannot be loaded as modules
+import { CoreActions } from "@src/core/messaging";
+import { MyActions } from "@src/listeners";
 
+// Wrapped in an IIFE to avoid contaminating host site
 (function contentScript() {
-  if (typeof chrome === "undefined") {
-    // @ts-ignore
-    chrome = browser;
-  }
+  CoreActions.optionsGet().then(options => {
+    console.log("Hello from the content script!"); // tslint:disable-line: no-console
+    console.log("Options: ", options); // tslint:disable-line: no-console
 
-  chrome.runtime.sendMessage(
-    {
-      type: "OPTIONS"
-    },
-    response => {
-      if (!response || !response.body) {
-        return;
-      }
-
-      const options = response.body;
-
-      // tslint:disable-next-line:no-console
-      console.log("Hello from the content script!");
-      // tslint:disable-next-line:no-console
-      console.log("Options: ", options);
-    }
-  );
+    MyActions.foo("bar").then(fooResult => {
+      console.log("From custom action foo:", fooResult); // tslint:disable-line:no-console
+    });
+  });
 })();

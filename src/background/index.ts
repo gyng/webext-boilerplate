@@ -1,10 +1,18 @@
 import { init } from "@src/core";
-import { Actions } from "@src/core/messaging";
+import { CoreActions } from "@src/core/messaging";
 
-init();
+import { getBrowser } from "@src/core/browser-detector";
+import { myListeners } from "@src/listeners";
 
-// tslint:disable-next-line:no-console
-console.log("Hello from the background script!");
+// Load up additional, non-core onMessage listeners
+init(myListeners);
 
-// tslint:disable-next-line:no-console
-Actions.optionsGet().then(console.log);
+console.log("Hello from the background script!"); // tslint:disable-line:no-console
+
+CoreActions.optionsGet().then(options => {
+  console.log("Loaded options:", options); // tslint:disable-line:no-console
+});
+
+getBrowser().then(browser => {
+  console.log(`Detected browser: ${browser}`); // tslint:disable-line:no-console
+});

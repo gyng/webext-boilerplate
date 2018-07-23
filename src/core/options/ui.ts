@@ -1,15 +1,15 @@
-import { Actions } from "@src/core/messaging";
+import { CoreActions } from "@src/core/messaging";
 
-export const exportSettings = Actions.optionsGet();
+export const exportSettings = CoreActions.optionsGet();
 
 export const importSettings = () => {
   const load = (w: Window) => {
-    Actions.optionsGet().then(schema => {
+    CoreActions.optionsGet().then(schema => {
       const json = w.prompt("Paste settings to import");
       try {
         if (json) {
           const imported = JSON.parse(json);
-          Actions.optionsUpdate(imported);
+          CoreActions.optionsUpdate(imported);
           w.alert("Settings loaded.");
         }
       } catch (e) {
@@ -30,7 +30,7 @@ export const resetSettings = () => {
   const resetFn = (win: Window) => {
     const reset = win.confirm("Reset settings to defaults?");
     if (reset) {
-      Actions.optionsReset();
+      CoreActions.optionsReset();
     }
   };
 

@@ -2,23 +2,18 @@
 
 [![Build Status](https://travis-ci.org/gyng/webext-boilerplate.svg?branch=master)](https://travis-ci.org/gyng/webext-boilerplate)
 
-This boilerplate is a quick start for creating a browser web extension.
+This TypeScript boilerplate is a quick start for creating a browser web extension. Supports Firefox and Chrome (via polyfill).
 
 It includes a basic setup for:
 
 * WebExtension structure and required files
 * Testing (jest)
-* Linting (eslint)
-* Building (web-ext)
-* Options management across content and background scripts (`src/options`)
-* Chrome polyfill for compatiability across Firefox and Chrome (`src/chrome-polyfill.js`)
-* A messaging setup between background script, content script, and options page (`src/background/core/messaging.js`)
-
-Files are deliberatly kept as plain Javascript files as this makes it easier for addon reviewers to review. It also works better with tooling. This is something to reconsider: maybe TypeScript might work better since largish extensions tend to get unwieldly.
-
-### Options
-
-Define your options in `src/background/options.js`, and then create an HTML element in `src/options/options.html` with the `id` attribute set to the option name as defined in `options.js`. The option should be automatically bound once this is done.
+* Linting (tslint)
+* Building (webpack, web-ext)
+* Options management across content and background scripts (`src/core/options`)
+* Options frontend with React
+* A messaging setup between background script, content script, and options page (`src/core/messaging.js`, `src/listeners.ts`)
+* Chrome polyfill for compatiability across Firefox and Chrome
 
 ## Clone
 
@@ -46,6 +41,15 @@ yarn test
 yarn test:watch
 ```
 
+### Quickstart
+
+Define your options in `src/schema.ts`, and then create a React component in `src/options/components/OptionsPage.tsx` with the `name` property set to the option name as defined in `schema.ts`. The option should be automatically bound once this is done.
+
+* Background script is in `src/background`
+* Content script is in `src/content`
+* Options page is in `src/options/components/OptionsPage.tsx`
+* Create your own messaging actions and listener in `src/listeners.ts`
+
 ## Build
 
 Builds a package in the `web-ext-artifacts` directory.
@@ -61,5 +65,17 @@ yarn build
 * Edge: https://developer.microsoft.com/en-us/microsoft-edge/extensions/requests/
 
 ## Notes for reviewers
+
+To build the project:
+
+1. `yarn install`
+2. `yarn build`
+
+This project includes vendored third-party libraries
+
+* [webextension-polyfill](https://github.com/mozilla/webextension-polyfill), obtained from [unpkg](https://unpkg.com/webextension-polyfill/dist/)
+* [l10n](https://github.com/piroor/webextensions-lib-l10n), modified from [source](https://github.com/piroor/webextensions-lib-l10n/blob/master/l10n.js)
+
+The project also includes third-party libraries obtained from npm. The list can be seen in the `dependencies` key of `package.json`.
 
 <Add notes here if you include third-party dependencies, or have added more stuff for the build process>

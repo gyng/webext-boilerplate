@@ -1,15 +1,8 @@
 import { reset } from "@src/core";
-import {
-  getKeys,
-  IOptions,
-  IOptionsSchema,
-  loadOptions
-} from "@src/core/options";
-import { OptionType, schema } from "@src/schema";
+import { getKeys, IOptions, loadOptions } from "@src/core/options";
+import { schema } from "@src/schema";
 
-export enum MessageType {
-  OPTIONS_GET = "OPTIONS_GET",
-  OPTIONS_SCHEMA = "OPTIONS_SCHEMA",
+export enum CoreMessageType {
   OPTIONS_UPDATE = "OPTIONS_UPDATE",
   OPTIONS_UPDATED = "OPTIONS_UPDATED",
   OPTIONS_RESET = "OPTIONS_RESET",
@@ -17,37 +10,28 @@ export enum MessageType {
 }
 
 export interface IMessage {
-  type: MessageType;
+  type: string; // Generic, users can extend from this
   body: {
     [k: string]: any;
   };
 }
 
-export interface IMessageOptionsSchema extends IMessage {
-  type: MessageType.OPTIONS_SCHEMA;
-  body: {
-    schema: IOptionsSchema;
-    types: OptionType;
-  };
+export interface ICoreMessage extends IMessage {
+  type: CoreMessageType;
 }
 
-export type RootMessage = IMessageOptionsSchema;
-
-export const Actions = {
+export const CoreActions = {
   optionKeysGet: (sch = schema) => {
     return () => Object.keys(sch);
   },
   optionsGet: (sch = schema) => {
-    return browser.runtime.sendMessage({
-      body: {
-        schema: sch
-      },
-      type: MessageType.OPTIONS_GET
-    });
+    return browser.storage.local
+      .get(getKeys(sch))
+      .then(opts => opts as IOptions);
   },
   optionsReset: () => {
     return browser.runtime.sendMessage({
-      type: MessageType.OPTIONS_RESET
+      type: CoreMessageType.OPTIONS_RESET
     });
   },
   optionsUpdate: (newValues: IOptions) => {
@@ -55,7 +39,7 @@ export const Actions = {
       body: {
         newValues
       },
-      type: MessageType.OPTIONS_UPDATE
+      type: CoreMessageType.OPTIONS_UPDATE
     });
   }
 };
@@ -65,7 +49,7 @@ export const Emit = {
     loadOptions(schema).then(options => {
       browser.runtime.sendMessage({
         body: { options },
-        type: MessageType.OPTIONS_UPDATED
+        type: CoreMessageType.OPTIONS_UPDATED
       });
     })
 };
@@ -74,39 +58,49 @@ export type Listener = (
   requestObj: object,
   sender: browser.runtime.MessageSender,
   sendResponse: any
-) => boolean | void;
+) => boolean | void | Promise<any>;
 
-const optionsListener: Listener = (requestObj, sender, sendResponse) => {
-  const request = requestObj as IMessage;
+const optionsListener: Listener = (requestObj, sender) => {
+  const request = requestObj as ICoreMessage;
 
   switch (request.type) {
-    case MessageType.OPTIONS_UPDATE:
-      browser.storage.local
+    case CoreMessageType.OPTIONS_UPDATE:
+      return browser.storage.local
         .set(request.body.newValues)
         .then(Emit.optionsUpdated);
-      break; // see if this breawks instead of return true
-    case MessageType.OPTIONS_GET:
-      browser.storage.local
-        .get(getKeys(request.body.schema))
-        .then(val => sendResponse(val));
-      return true;
-    case MessageType.OPTIONS_RESET:
-      browser.storage.local.clear().then(Emit.optionsUpdated);
-      break;
-    case MessageType.RELOAD:
+    case CoreMessageType.OPTIONS_RESET:
+      return browser.storage.local.clear().then(Emit.optionsUpdated);
+    case CoreMessageType.RELOAD:
       reset();
       break;
     default:
       break;
   }
+};
 
-  return false;
+export let listeners: Listener[] = [optionsListener];
+
+export const registerListener = (l: Listener) => {
+  listeners.push(l);
+};
+
+export const unregisterListener = (toRemove: Listener) => {
+  listeners = listeners.filter(l => l !== toRemove);
+};
+
+export const clearListeners = () => {
+  listeners = [optionsListener];
 };
 
 export const listen = () => {
-  browser.runtime.onMessage.addListener(optionsListener);
+  listeners.forEach(l => {
+    browser.runtime.onMessage.removeListener(l);
+    browser.runtime.onMessage.addListener(l);
+  });
 };
 
 export const stop = () => {
-  browser.runtime.onMessage.removeListener(optionsListener);
+  listeners.forEach(l => {
+    browser.runtime.onMessage.removeListener(l);
+  });
 };

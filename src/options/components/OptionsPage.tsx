@@ -2,19 +2,20 @@ import { l10n } from "@vendor/l10n/l10n";
 import * as React from "react";
 
 import { Button, Checkbox, ExportSettingsButton } from "@src/core/components";
-import { Actions, IMessage, MessageType } from "@src/core/messaging";
+import { CoreActions, CoreMessageType, IMessage } from "@src/core/messaging";
+import { IOptions } from "@src/core/options";
 import { importSettings, resetSettings } from "@src/core/options/ui";
-import { schema } from "@src/schema";
+
 const styles = require("@src/core/components/styles.scss");
 
 export interface IOptionControl {
   name: string;
-  options: typeof schema;
+  options: IOptions;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface IOptionsPageState {
-  options: typeof schema;
+  options: IOptions;
 }
 
 export default class OptionsPage extends React.Component<
@@ -28,7 +29,7 @@ export default class OptionsPage extends React.Component<
     super(props);
 
     this.updateState = () => {
-      Actions.optionsGet().then(options => {
+      CoreActions.optionsGet().then(options => {
         this.setState({ options });
       });
     };
@@ -36,7 +37,7 @@ export default class OptionsPage extends React.Component<
     this.listener = (requestObj: object) => {
       const request = requestObj as IMessage;
 
-      if (request.type === MessageType.OPTIONS_UPDATED) {
+      if (request.type === CoreMessageType.OPTIONS_UPDATED) {
         this.updateState();
       }
     };

@@ -1,4 +1,4 @@
-import { Actions, listen, stop } from "../../src/core/messaging";
+import { CoreActions, listen, stop } from "../../src/core/messaging";
 import {
   getKeys,
   IOptions,
