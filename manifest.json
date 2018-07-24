@@ -13,25 +13,20 @@
   "homepage_url": "https://github.com/gyng/webext-boilerplate",
 
   "background": {
-    "scripts": [
-      "src/chrome-polyfill.js",
-      "src/background/core/messaging.js",
-      "src/background/core/options.js",
-      "src/background/index.js"
-    ]
+    "scripts": ["dist/vendor/browser-polyfill.js", "dist/bundles/background.js"]
   },
 
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["src/content/index.js"]
+      "js": ["dist/vendor/browser-polyfill.js", "dist/bundles/content.js"]
     }
   ],
 
   "options_ui": {
     "browser_style": true,
     "chrome_style": true,
-    "page": "src/options/options.html"
+    "page": "dist/assets/index.html"
   },
 
   "icons": {

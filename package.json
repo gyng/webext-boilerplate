@@ -3,38 +3,57 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "build": "env -u WEB_EXT_API_KEY -u WEB_EXT_API_SECRET web-ext build --overwrite-dest -i test docs yarn.lock",
-    "build:firefox:submit": "web-ext sign",
-    "d": "env -u WEB_EXT_API_KEY -u WEB_EXT_API_SECRET web-ext run --verbose",
-    "d:noenv": "web-ext run",
-    "lint": "env -u WEB_EXT_API_KEY -u WEB_EXT_API_SECRET web-ext lint && eslint src test",
-    "lint:fix": "eslint --fix src test",
-    "prettier": "echo 'Run yarn prettier:write to write.\n' && prettier --list-different src/**/*.js src/*.js test/**/*.js test/*.js",
-    "prettier:write": "prettier --write src/**/*.js src/*.js test/**/*.js test/*.js",
+    "build": "yarn tsc:check && yarn webpack",
+    "build:prod": "yarn tsc:check && NODE_ENV=production yarn webpack --mode production",
+    "build:release": "yarn build:prod && yarn:package",
+    "d:noenv": "yarn webpack --watch & env -u WEB_EXT_API_KEY -u WEB_EXT_API_SECRET yarn d",
+    "d:stable-x64": "yarn webpack --watch & web-ext run --firefox=\"C:/Program Files/Mozilla Firefox/firefox.exe\" --config=.web-ext-config.js",
+    "d:nightly:win": "web-ext run --firefox=\"C:/Program Files/Nightly/firefox.exe\" --config=.web-ext-config.js",
+    "d": "yarn webpack --watch & web-ext run",
+    "d:nightly": "yarn web-ext run --firefox=nightly",
+    "lint:tslint": "tslint -c tslint.json './src/**/*.ts' './src/**/*.tsx' './test/**/*.ts' './test/**/*.tsx' --project tsconfig.json",
+    "lint:webext": "web-ext lint",
+    "lint": "yarn lint:webext && yarn lint:tslint",
+    "package": "env -u WEB_EXT_API_KEY -u WEB_EXT_API_SECRET web-ext build --overwrite-dest -i test docs yarn.lock",
+    "test:watch": "jest --watch",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "tsc:check:no-error": "tsc --noEmit --skipLibCheck || true",
+    "tsc:check": "tsc --noEmit --skipLibCheck",
+    "webpack": "webpack -c webpack.config.js"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^14.1.0",
-    "eslint-config-prettier": "^2.6.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jest": "^21.2.0",
-    "eslint-plugin-jsx-a11y": "^4.0.0",
-    "eslint-plugin-prettier": "^2.3.1",
-    "eslint-plugin-react": "^6.10.3",
-    "jest": "^21.2.1",
-    "jest-webextension-mock": "^2.1.0",
-    "prettier": "^1.7.4",
-    "web-ext": "^2.7.0"
+    "@babel/core": "^7.0.0-beta.54",
+    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.54",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.54",
+    "@babel/preset-env": "^7.0.0-beta.54",
+    "@babel/preset-react": "^7.0.0-beta.54",
+    "@babel/preset-typescript": "^7.0.0-beta.54",
+    "@types/chrome": "^0.0.69",
+    "@types/jest": "^23.3.0",
+    "@types/react": "^16.4.6",
+    "@types/react-dom": "^16.0.6",
+    "babel-loader": "^8.0.0-beta",
+    "css-loader": "^1.0.0",
+    "file-loader": "^1.1.11",
+    "jest": "^23.4.1",
+    "jest-webextension-mock": "^3.3.0",
+    "prettier": "^1.13.7",
+    "style-loader": "^0.21.0",
+    "ts-jest": "^23.0.1",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.13.0",
+    "tslint-eslint-rules": "^5.3.1",
+    "tslint-plugin-prettier": "^1.3.0",
+    "tslint-react": "^3.6.0",
+    "typescript": "^2.9.2",
+    "web-ext": "^2.7.0",
+    "web-ext-types": "^2.1.0",
+    "webpack": "^4.16.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-shell-plugin": "^0.5.0"
   },
-  "jest": {
-    "setupFiles": [
-      "jest-webextension-mock"
-    ],
-    "modulePathIgnorePatterns": [
-      "<rootDir>/web-ext-artifacts/"
-    ]
-  },
-  "dependencies": {}
+  "dependencies": {
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  }
 }
