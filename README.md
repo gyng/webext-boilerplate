@@ -69,13 +69,16 @@ yarn build
 To build the project:
 
 1. `yarn install`
-2. `yarn build`
+2. `yarn build`: the output will be placed in the `dist` directory.
 
-This project includes vendored third-party libraries
+This project includes vendored third-party libraries in addition to those defined in `package.json`
 
-* [webextension-polyfill](https://github.com/mozilla/webextension-polyfill), obtained from [unpkg](https://unpkg.com/webextension-polyfill/dist/)
-* [l10n](https://github.com/piroor/webextensions-lib-l10n), modified from [source](https://github.com/piroor/webextensions-lib-l10n/blob/master/l10n.js)
+* [webextension-polyfill](https://github.com/mozilla/webextension-polyfill), obtained from [unpkg](https://unpkg.com/webextension-polyfill/dist/) as recommended by the author
+* [l10n](https://github.com/piroor/webextensions-lib-l10n), modified from [source](https://github.com/piroor/webextensions-lib-l10n/blob/4b4589032ece93ea0907715f765310514f7e4aab/l10n.js)
 
 The project also includes third-party libraries obtained from npm. The list can be seen in the `dependencies` key of `package.json`.
+
+* react
+* react-dom
 
 <Add notes here if you include third-party dependencies, or have added more stuff for the build process>

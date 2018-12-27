@@ -17,8 +17,8 @@ export const init = (additionalListeners?: Listener[]) => {
 
 // Add any additional deregistration/cleanup needed here
 export const reset = (additionalListeners: Listener[] = listeners) => {
-  if (browser.contextMenus) {
-    browser.contextMenus.removeAll().then(() => {
+  if (browser.menus) {
+    browser.menus.removeAll().then(() => {
       clearListeners();
       stop();
       init(additionalListeners);
