@@ -7,11 +7,11 @@ This TypeScript boilerplate is a quick start for creating a browser web extensio
 It includes a basic setup for:
 
 * WebExtension structure and required files
-* Testing (jest)
+* Testing (jest, travis)
 * Linting (tslint)
 * Building (webpack, web-ext)
 * Options management across content and background scripts (`src/core/options`)
-* Options frontend with React
+* Options frontend using React, with localisation support
 * A messaging setup between background script, content script, and options page (`src/core/messaging.js`, `src/listeners.ts`)
 * Chrome polyfill for compatiability across Firefox and Chrome
 
@@ -53,7 +53,8 @@ Define your options in `src/schema.ts`, and then create a React component in `sr
 * Background script is in `src/background`
 * Content script is in `src/content`
 * Options page is in `src/options/components/OptionsPage.tsx`
-* Create your own messaging actions and listener in `src/listeners.ts`
+* Create your own messaging actions and listener in `src/messaging.ts`
+* Change permissions in `manifest.json`. If you're getting weird errors make sure your permissions are correct!
 
 ## Build
 
