@@ -26,11 +26,15 @@ git remote add origin <YOUR_ORIGIN>
 
 ## Develop
 
+You will need to run both `d:webpack` and `d:webext` at the same time.
+
 ```
 yarn install
-yarn d               # Wait a while for it to load the extension
-yarn d:noenv         # Starts a dev session without extra env variables (for use with Windows)
-yarn d:locale:en     # Starts in en-US locale (this is bugged in Firefox still)
+yarn d:webpack       # Start the webpack watcher (TS > JS)
+yarn d:webext        # Start the web-ext watcher (JS > Firefox)
+
+yarn d:noenv         # Starts web-ext without extra env variables (for use with Windows)
+yarn d:locale:en     # Starts web-ext in en-US locale (this is bugged in Firefox still)
 ```
 
 Visit `about:debugging` and `about:extensions` in the Firefox window that just popped up.

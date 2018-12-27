@@ -1,6 +1,6 @@
 import { init } from "@src/core";
 import { CoreActions, Listener } from "@src/core/messaging";
-import { IMyMessage, MyActions, MyMessageTypes } from "@src/listeners";
+import { IMyMessage, MyActions, MyMessageTypes } from "@src/messaging";
 
 // Wrapped in an IIFE to avoid contaminating host site
 (function contentScript() {

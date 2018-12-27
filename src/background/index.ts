@@ -4,7 +4,7 @@ import { init } from "@src/core";
 import { CoreActions } from "@src/core/messaging";
 
 import { getBrowser } from "@src/core/browser-detector";
-import { MyActions, myListeners } from "@src/listeners";
+import { MyActions, myListeners } from "@src/messaging";
 
 // Load up additional, non-core onMessage listeners
 init(myListeners);
