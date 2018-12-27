@@ -66,6 +66,7 @@ module.exports = {
         exclude: /\/(node_modules|vendor)\//,
         loader: "babel-loader",
         options: {
+          cacheDirectory: true,
           plugins: [
             "@babel/proposal-class-properties",
             "@babel/proposal-object-rest-spread"
@@ -78,6 +79,7 @@ module.exports = {
         exclude: /\/node_modules\//,
         loader: "babel-loader",
         options: {
+          cacheDirectory: true,
           plugins: [
             "@babel/proposal-class-properties",
             "@babel/proposal-object-rest-spread"
