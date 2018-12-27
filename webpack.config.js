@@ -96,6 +96,7 @@ module.exports = {
   ],
 
   optimization: {
+    minimize: false,
     splitChunks: false
   },
 
