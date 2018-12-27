@@ -35,5 +35,5 @@
     "128": "icons/ic_archive_black_128px.png"
   },
 
-  "permissions": ["<all_urls>", "activeTab", "storage"]
+  "permissions": ["<all_urls>", "activeTab", "storage", "menus", "tabs"]
 }
