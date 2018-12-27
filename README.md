@@ -52,11 +52,21 @@ Define your options in `src/schema.ts`, and then create a React component in `sr
 
 ## Build
 
-Builds a package in the `web-ext-artifacts` directory.
+Bundles your code into .js files in `/dist`:
 
 ```
 yarn build
+yarn build:prod  # This minifies and is therefore discouraged
 ```
+
+Bundles and creates a package in the `web-ext-artifacts` directory:
+
+```
+yarn build:release
+yarn build:release:minified  # This minifies and is therefore discouraged
+```
+
+Unminified packages are slower and larger (especially for React), but allows human checkers to even scan through the code.
 
 ## Deploy
 

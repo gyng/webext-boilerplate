@@ -9,7 +9,7 @@ module.exports = {
 
   // This has to be source-map as webexts cannot eval due to CSP
   devtool:
-    process.env.NODE_ENV === "production"
+    process.env.NODE_ENV === "production" || process.env.NOMAP === "1"
       ? "none"
       : "inline-source-map",
 

@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "outfile": "options.js",
   "files": [
-    "**/*.ts"
+    "**/*.ts",
+    "**/*.tsx"
   ]
 }
