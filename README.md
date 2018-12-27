@@ -17,10 +17,11 @@ It includes a basic setup for:
 
 ## Clone
 
-Requires yarn and Firefox. Clone, fork, or obtain the boilerplate and update your git remotes
+Requires yarn and Firefox. Clone, fork, or obtain the boilerplate somehow and then update your git remotes
 
 ```
-git@github.com:gyng/webext-boilerplate.git
+git clone https://github.com/gyng/webext-boilerplate.git
+cd webext-boilerplate
 git remote add origin <YOUR_ORIGIN>
 ```
 
