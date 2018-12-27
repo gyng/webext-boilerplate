@@ -28,8 +28,9 @@ git remote add origin <YOUR_ORIGIN>
 
 ```
 yarn install
-yarn d           # Wait a while for it to load the extension
-yarn d:noenv     # For use with Windows
+yarn d               # Wait a while for it to load the extension
+yarn d:noenv         # Starts a dev session without extra env variables (for use with Windows)
+yarn d:locale:en-us  # Starts in en-US locale
 ```
 
 Visit `about:debugging` and `about:extensions` in the Firefox window that just popped up.

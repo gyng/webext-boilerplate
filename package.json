@@ -12,6 +12,7 @@
     "d:stable-x64": "yarn webpack --watch & web-ext run --firefox=\"C:/Program Files/Mozilla Firefox/firefox.exe\" --config=.web-ext-config.js",
     "d:nightly:win": "web-ext run --firefox=\"C:/Program Files/Nightly/firefox.exe\" --config=.web-ext-config.js",
     "d": "yarn webpack --watch & web-ext run --start-url about:debugging --start-url about:addons",
+    "d:locale:en": "yarn d --pref intl.locale.requested=en --pref intl.locale.matchOS=false",
     "d:nightly": "yarn web-ext run --firefox=nightly",
     "lint:tslint": "tslint -c tslint.json './src/**/*.ts' './src/**/*.tsx' './test/**/*.ts' './test/**/*.tsx' --project tsconfig.json",
     "lint:webext": "web-ext lint",
