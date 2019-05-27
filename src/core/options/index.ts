@@ -32,7 +32,7 @@ export const loadOptions = (sch: IOptionsSchema) =>
 
     localKeys.forEach(key => {
       const option = sch[key];
-      const onLoad: ((x: any) => any) = option.onLoad || (x => x);
+      const onLoad: (x: any) => any = option.onLoad || (x => x);
       const value = onLoad(loadedOptions[key]);
       if (typeof value !== "undefined") {
         options[key] = value;
