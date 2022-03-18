@@ -1,7 +1,5 @@
 # webext-boilerplate
 
-[![Build Status](https://travis-ci.org/gyng/webext-boilerplate.svg?branch=master)](https://travis-ci.org/gyng/webext-boilerplate)
-
 This TypeScript boilerplate is a quick start for creating a browser web extension. Supports Firefox and Chrome (via polyfill).
 
 It includes a basic setup for:
