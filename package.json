@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "build": "yarn tsc:check && yarn build:esbuild",
+    "build": "yarn build:esbuild",
     "build:release": "yarn test && yarn lint && yarn build && yarn:package",
     "build:esbuild": "node esbuild.js --bundle --sourcemap && bash ./copystatic.sh",
     "gen:tl-key": "node gen-tl-key.js > src/tl.ts",
