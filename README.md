@@ -60,6 +60,8 @@ Define your options in `src/schema.ts`, and then create a React component in `sr
 
 Bundles your code into .js files in `/dist`:
 
+Bump the version number in `manifest.json` first.
+
 ```
 yarn build
 ```
@@ -73,7 +75,7 @@ yarn build:release:minified  # This minifies and is therefore discouraged
 
 Unminified packages are slower and larger (especially for React), but allows human checkers to scan through the code.
 
-- Due to the esbuildh setup, the options entrypoint in `/dist/index-{somehash}.html` is manually copied over using at the package step using `copystatic.sh`.
+- Due to the esbuild setup, the options entrypoint in `/dist/index-{somehash}.html` is manually copied over using at the package step using `copystatic.sh`.
 
 - To add new localisation strings, edit `_locales/en/messages.json`. Once done, run `yarn gen:tl-key` to create TS typedefinitions for you new i18n keys for typechecking.
 
