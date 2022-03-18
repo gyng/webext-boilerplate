@@ -30,6 +30,7 @@ export var l10n = {
     );
     for (let i = 0, maxi = texts.snapshotLength; i < maxi; i++) {
       const text = texts.snapshotItem(i);
+      // @ts-expect-error lib
       text.nodeValue = this.updateString(text.nodeValue);
     }
 

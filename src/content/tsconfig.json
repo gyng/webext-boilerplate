@@ -1,7 +1,0 @@
-{
-  "extends": "../../tsconfig.json",
-  "outfile": "content.js",
-  "files": [
-    "**/*.ts"
-  ]
-}

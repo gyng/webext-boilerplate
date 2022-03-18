@@ -3,12 +3,12 @@ module.exports = {
   verbose: true,
   // Command options:
   build: {
-    overwriteDest: true
+    overwriteDest: true,
   },
   run: {
     firefox: "stable",
-    startUrl: ["about:addons", "about:debugging"]
+    startUrl: ["about:addons", "about:debugging"],
   },
 
-  ignoreFiles: []
+  ignoreFiles: [],
 };

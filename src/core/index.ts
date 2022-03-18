@@ -4,12 +4,12 @@ import {
   Listener,
   listeners,
   registerListener,
-  stop
+  stop,
 } from "@src/core/messaging";
 
 export const init = (additionalListeners?: Listener[]) => {
   if (additionalListeners) {
-    additionalListeners.forEach(l => registerListener(l));
+    additionalListeners.forEach((l) => registerListener(l));
   }
 
   listen();

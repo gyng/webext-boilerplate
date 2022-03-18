@@ -1,5 +1,3 @@
-// tslint:disable:no-console
-
 import { init } from "@src/core";
 import { CoreActions } from "@src/core/messaging";
 
@@ -12,7 +10,9 @@ init(myListeners);
 console.log("Hello from the background script!");
 
 CoreActions.optionsGet()
-  .then(options => {
+  .then((options) => {
+    console.log("Background script loaded options", options);
+
     // This sends a message to the content script
     const exampleLocaleMessage = browser.i18n.getMessage("oFoo");
     browser.menus.create({
@@ -25,19 +25,19 @@ CoreActions.optionsGet()
           })
           .catch(console.error);
       },
-      title: `Send a message to the content script ${exampleLocaleMessage}`
+      title: `Send a message to the content script ${exampleLocaleMessage}`,
     });
 
     console.log("Loaded options:", options);
   })
-  .catch(e => {
+  .catch((e) => {
     console.error(e);
   });
 
 getBrowser()
-  .then(browser => {
+  .then((browser) => {
     console.log(`Detected browser: ${browser}`);
   })
-  .catch(e => {
+  .catch((e) => {
     console.error(e);
   });

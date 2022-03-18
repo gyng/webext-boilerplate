@@ -2,50 +2,58 @@ import { l10n } from "@vendor/l10n/l10n";
 import * as React from "react";
 
 import { SettingsSection } from "@src/core/components";
-import { CoreActions, CoreMessageType, IMessage } from "@src/core/messaging";
-import { IOptions, IOptionsSchema } from "@src/core/options";
-import { schema } from "@src/schema";
+import {
+  CoreActions,
+  CoreMessageType,
+  isOwnMessage,
+} from "@src/core/messaging";
+import { TL } from "@src/tl";
+import { Options } from "@src/schema";
 
 export interface IOptionsPageContainerState {
-  options: IOptions;
+  options: Options | null;
   children?: React.ReactChildren;
 }
 
 export const OptionsContext: React.Context<{
-  options?: IOptions;
-  schema?: IOptionsSchema;
+  /** Can either be unpopulated or populated */
+  options?: Options;
 }> = React.createContext({});
 
 export class OptionsPageContainer extends React.Component<
-  {},
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any,
   IOptionsPageContainerState
 > {
   private updateState: () => void;
   private listener: (requestObj: object) => void;
 
-  public constructor(props: {}) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public constructor(props: any) {
     super(props);
 
     this.updateState = () => {
-      CoreActions.optionsGet().then(options => {
+      CoreActions.optionsGet().then((options) => {
         this.setState({ options });
       });
     };
 
-    this.listener = (requestObj: object) => {
-      const request = requestObj as IMessage;
-
-      if (request.type === CoreMessageType.OPTIONS_UPDATED) {
+    this.listener = (request: object) => {
+      if (!isOwnMessage(request)) {
+        return;
+      }
+      if (request.type === CoreMessageType.OPTIONS_UPDATE_SUCCESS) {
         this.updateState();
       }
     };
-
-    this.state = { options: {} };
+    this.state = { options: null };
   }
 
   public render() {
-    return (
-      <OptionsContext.Provider value={{ options: this.state.options, schema }}>
+    return !this.state.options ? (
+      TL.oLoadingOptions
+    ) : (
+      <OptionsContext.Provider value={{ options: this.state.options }}>
         <div>
           {this.props.children}
 

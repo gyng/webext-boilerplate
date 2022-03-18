@@ -5,47 +5,44 @@ import {
   Checkbox,
   Select,
   Textarea,
-  Textbox
+  Textbox,
 } from "@src/core/components/controls";
 
 import { BROWSERS } from "@src/core/browser-detector";
 import { BrowserOnly } from "@src/core/components/BrowserOnly";
-
-const styles = require("@src/core/components/photon.scss");
+import { TL } from "@src/tl";
 
 // This will be injected into OptionsPageContainer
 // Options are availabe to controls via a React context set up in OptionsPageContainer
-export const OptionsPage: React.SFC<{}> = () => (
+export const OptionsPage: React.FC = () => (
   <>
-    <h2>Hello, __MSG_extensionName__!</h2>
+    <h2>Hello, {TL.extensionName}!</h2>
 
-    <Checkbox name="foo" label="__MSG_oFoo__" />
-
-    <Textarea name="bar" label={<h3>__MSG_oBar__</h3>} />
+    <Checkbox name="foo" labelEl={TL.oFoo} />
+    <Textarea name="bar" labelEl={<h3>{TL.oBar}</h3>} />
 
     <Select
       name="baz"
-      label="Pick me!"
+      labelEl="Pick me!"
       options={[{ label: "pick a", value: "a" }, { value: "b" }]}
     />
 
-    <Textbox name="qix" label="Lazy foxes" />
+    <Textbox name="qix" labelEl="Lazy foxes" />
 
-    <Textbox name="qaz" label="Coming soon!" disabled={true} />
+    <Textbox name="qaz" labelEl="Coming soon!" disabled />
 
     <BrowserOnly browser={BROWSERS.FIREFOX}>
-      <Textbox name="ff" label="Firefox only" disabled={true} />
+      <Textbox name="ff" labelEl="Firefox only" />
     </BrowserOnly>
 
     <BrowserOnly browser={BROWSERS.CHROME}>
-      <Textbox name="ch" label="Chrome only" disabled={true} />
+      <Textbox name="ch" labelEl="Chrome only" />
     </BrowserOnly>
 
-    <div className={`${styles.infoBar} ${styles.row}`}>An information bar</div>
+    <div className="infobar row">An information bar</div>
 
     <Button
       onClick={() => {
-        // tslint:disable-next-line:no-console
         console.log("yay");
       }}
     >

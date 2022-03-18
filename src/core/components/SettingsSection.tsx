@@ -1,77 +1,58 @@
 import React from "react";
 
 import { Button, ExportSettingsButton } from "@src/core/components/controls";
-import { CoreMessageType, ICoreMessage, Listener } from "@src/core/messaging";
+import { CoreMessageType, isOwnMessage } from "@src/core/messaging";
 import { importSettings, resetSettings } from "@src/core/options/ui";
+import { TL } from "@src/tl";
 
-const styles = require("./photon.scss");
+export const SettingsSection: React.FC = () => {
+  const [lastUpdated, setLastUpdated] = React.useState<Date | null>(null);
 
-export interface ISettingsSectionState {
-  lastUpdated?: Date;
-}
-
-export class SettingsSection extends React.Component<
-  {},
-  ISettingsSectionState
-> {
-  private listener: Listener;
-
-  public constructor(props: {}) {
-    super(props);
-
-    this.listener = requestObj => {
-      const request = requestObj as ICoreMessage;
-
+  React.useEffect(() => {
+    const listener: browser.runtime.onMessageVoid = (request) => {
+      if (!isOwnMessage(request)) {
+        return;
+      }
       switch (request.type) {
-        case CoreMessageType.OPTIONS_UPDATED:
-          this.setState({ lastUpdated: new Date() });
+        case CoreMessageType.OPTIONS_UPDATE_SUCCESS:
+          setLastUpdated(new Date());
           break;
         default:
           break;
       }
     };
+    browser.runtime.onMessage.addListener(listener);
+    return () => {
+      browser.runtime.onMessage.removeListener(listener);
+    };
+  }, []);
 
-    this.state = {};
-  }
-
-  public render() {
-    return (
-      <>
-        <h2 id="section-more-options">
-          __MSG_oMoreOptions__
-          <div className={styles.floatRight}>
-            <Button onClick={resetSettings}>__MSG_oRestoreDefaults__</Button>
-          </div>
-        </h2>
-
-        <div
-          style={{
-            alignItems: "flex-start",
-            display: "flex",
-            justifyContent: "flex-start"
-          }}
-        >
-          <Button onClick={importSettings}>__MSG_oImportSettings__</Button>
-          <ExportSettingsButton />
+  return (
+    <>
+      <h2 id="section-more-options">
+        {TL.oMoreOptions}
+        <div className="floatRight">
+          <Button onClick={resetSettings}>{TL.oRestoreDefaults}</Button>
         </div>
+      </h2>
 
-        <p>
-          <span>__MSG_oLastSavedAt__</span>
-          <span id="lastSavedAt">
-            {this.state.lastUpdated
-              ? this.state.lastUpdated.toLocaleString()
-              : "__MSG_oLastSavedAtNever__"}
-          </span>
-        </p>
-      </>
-    );
-  }
+      <div
+        style={{
+          alignItems: "flex-start",
+          display: "flex",
+          justifyContent: "flex-start",
+        }}
+      >
+        <Button onClick={importSettings}>{TL.oImportSettings}</Button>
+        <ExportSettingsButton />
+      </div>
 
-  public componentDidMount() {
-    browser.runtime.onMessage.addListener(this.listener);
-  }
-
-  public componentWillUnmount() {
-    browser.runtime.onMessage.removeListener(this.listener);
-  }
-}
+      <p>
+        <span>{TL.oLastSavedAt}</span>
+        <span id="lastSavedAt">
+          {lastUpdated ? lastUpdated.toLocaleString() : TL.oLastSavedAtNever}
+        </span>
+      </p>
+    </>
+  );
+};

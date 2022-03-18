@@ -2,46 +2,27 @@ import React, { ReactElement } from "react";
 
 import { BROWSERS, getBrowser } from "@src/core/browser-detector";
 
-const styles = require("./photon.scss");
-
 export interface IBrowserOnlyProps {
   browser: BROWSERS;
-  children: ReactElement<any>;
+  children: ReactElement;
 }
 
-export interface IBrowserOnlyState {
-  currentBrowser: BROWSERS;
-}
-
-export class BrowserOnly extends React.Component<
-  IBrowserOnlyProps,
-  IBrowserOnlyState
-> {
-  public constructor(props: IBrowserOnlyProps) {
-    super(props);
-
-    this.state = {
-      currentBrowser: BROWSERS.UNKNOWN
-    };
-  }
-
-  public render() {
-    const disabled = this.props.browser !== this.state.currentBrowser;
-
-    const badge = {
-      [BROWSERS.FIREFOX]: <span className={styles.badge}>Firefox</span>,
-      [BROWSERS.CHROME]: <span className={styles.badge}>Chrome</span>,
-      [BROWSERS.UNKNOWN]: null
-    }[this.props.browser];
-
-    return (
-      <div>{React.cloneElement(this.props.children, { disabled, badge })}</div>
-    );
-  }
-
-  public componentDidMount() {
-    getBrowser().then(currentBrowser => {
-      this.setState({ currentBrowser });
+export const BrowserOnly: React.FC<IBrowserOnlyProps> = (props) => {
+  const [currentBrowser, setCurrentBrowser] = React.useState<BROWSERS>(
+    BROWSERS.UNKNOWN
+  );
+  React.useEffect(() => {
+    getBrowser().then((currentBrowser) => {
+      setCurrentBrowser(currentBrowser);
     });
-  }
-}
+  }, []);
+
+  const disabled = props.browser !== currentBrowser;
+  const badge = {
+    [BROWSERS.FIREFOX]: <span className="badge">Firefox</span>,
+    [BROWSERS.CHROME]: <span className="badge">Chrome</span>,
+    [BROWSERS.UNKNOWN]: null,
+  }[props.browser];
+
+  return React.cloneElement(props.children, { disabled, badge });
+};

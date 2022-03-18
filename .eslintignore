@@ -1,7 +1,6 @@
 node_modules
 web-ext-artifacts
-src/vendor
-src/background/vendor
-src/options/vendor
-src/content/vendor
-bundle
+dist
+vendor
+gen-tl-key.js
+jest.config.js

@@ -1,91 +1,118 @@
 import { reset } from "@src/core";
-import { getKeys, IOptions, loadOptions } from "@src/core/options";
-import { schema } from "@src/schema";
+import { loadOptions, OptionKV, saveOptions } from "@src/core/options";
+import { Options } from "@src/schema";
 
 export enum CoreMessageType {
-  OPTIONS_UPDATE = "OPTIONS_UPDATE",
-  OPTIONS_UPDATED = "OPTIONS_UPDATED",
-  OPTIONS_RESET = "OPTIONS_RESET",
-  RELOAD = "RELOAD"
+  OPTIONS_UPDATE_REQUEST = "OPTIONS_UPDATE_REQUEST",
+  OPTIONS_UPDATE_SUCCESS = "OPTIONS_UPDATE_SUCCESS",
+  EXTENSION_RELOAD_REQUEST = "EXTENSION_RELOAD_REQUEST",
 }
 
-export interface IMessage {
-  type: string; // Generic, users can extend from this
-  body: {
-    [k: string]: any;
+export type MessageBase = {
+  id: string;
+  extid: string;
+  timestamp: number;
+  /** postMessage/sendMessage can only pass clonable objects around */
+  // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#data_cloning_algorithm
+};
+
+export type CoreMessageSchema =
+  | {
+      type: CoreMessageType.OPTIONS_UPDATE_REQUEST;
+      body: { newValues: OptionKV };
+    }
+  | {
+      type: CoreMessageType.EXTENSION_RELOAD_REQUEST;
+      body: null;
+    }
+  | {
+      type: CoreMessageType.OPTIONS_UPDATE_SUCCESS;
+      body: { options: Options };
+    };
+
+export type Message = CoreMessageSchema & MessageBase;
+
+export const makeMessage = (
+  opts: CoreMessageSchema & Partial<MessageBase>,
+  replyingTo?: MessageBase
+): Message => {
+  return {
+    type: opts.type,
+    body: JSON.parse(JSON.stringify(opts.body)),
+    id: opts?.id ?? replyingTo?.id ?? crypto.randomUUID(),
+    extid: opts?.extid ?? browser.runtime.id,
+    timestamp: Date.now(),
   };
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isMessage(obj: any): obj is Message {
+  return obj.type != null && obj.id != null && obj.timestamp != null;
 }
 
-export interface ICoreMessage extends IMessage {
-  type: CoreMessageType;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isOwnMessage(obj: any): obj is Message {
+  return isMessage(obj) && obj.extid === browser.runtime.id;
 }
 
 export const CoreActions = {
-  optionKeysGet: (sch = schema) => {
+  optionKeysGet: (sch = new Options()) => {
     return () => Object.keys(sch);
   },
-  optionsGet: (sch = schema) => {
-    const keys = getKeys(sch);
-
-    // Need to fill out options in storage with defaults if the key is undefined
-    const defaults: IOptions = keys.reduce(
-      (acc, k) => ({ ...acc, [k]: sch[k].default }),
-      {}
-    );
-
-    return browser.storage.local
-      .get(keys)
-      .then(opts => ({ ...defaults, ...(opts as IOptions) }));
+  optionsGet: (sch = new Options()) => {
+    return loadOptions(sch);
   },
+  optionsUpdated: (sch = new Options()) =>
+    loadOptions(sch).then((options) => {
+      browser.runtime.sendMessage(
+        makeMessage({
+          type: CoreMessageType.OPTIONS_UPDATE_SUCCESS,
+          body: { options },
+        })
+      );
+    }),
   optionsReset: () => {
-    return browser.runtime.sendMessage({
-      type: CoreMessageType.OPTIONS_RESET
-    });
+    return browser.runtime.sendMessage(
+      makeMessage({
+        type: CoreMessageType.EXTENSION_RELOAD_REQUEST,
+        body: null,
+      })
+    );
   },
-  optionsUpdate: (newValues: IOptions) => {
-    return browser.runtime.sendMessage({
-      body: {
-        newValues
-      },
-      type: CoreMessageType.OPTIONS_UPDATE
-    });
+  optionsUpdate: (newValues: OptionKV) => {
+    browser.runtime.sendMessage(
+      makeMessage({
+        type: CoreMessageType.OPTIONS_UPDATE_REQUEST,
+        body: { newValues },
+      })
+    );
+  },
+};
+
+export type Listener = browser.runtime.onMessageEvent;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const optionsListener: browser.runtime.onMessageVoid = (
+  request: object
+  // sender: browser.runtime.MessageSender,
+  // sendResponse: (response: object) => boolean | Promise<void> | void
+) => {
+  if (!isOwnMessage(request)) {
+    return;
   }
-};
-
-export const Emit = {
-  optionsUpdated: () =>
-    loadOptions(schema).then(options => {
-      browser.runtime.sendMessage({
-        body: { options },
-        type: CoreMessageType.OPTIONS_UPDATED
-      });
-    })
-};
-
-export type Listener = (
-  requestObj: object,
-  sender: browser.runtime.MessageSender,
-  sendResponse: any
-) => boolean | void | Promise<any>;
-
-const optionsListener: Listener = (requestObj, sender) => {
-  const request = requestObj as ICoreMessage;
 
   switch (request.type) {
-    case CoreMessageType.OPTIONS_UPDATE:
-      Object.keys(request.body.newValues).forEach(key => {
-        if (!Object.keys(schema).includes(key)) {
-          // tslint:disable-next-line
-          console.warn(`Setting option "${key}", but it is not in the schema!`);
-        }
-      });
-
+    case CoreMessageType.OPTIONS_UPDATE_REQUEST:
+      return saveOptions(request.body.newValues)
+        .then(() => {
+          CoreActions.optionsUpdated();
+        })
+        .catch(console.error);
+    case CoreMessageType.OPTIONS_UPDATE_SUCCESS:
       return browser.storage.local
-        .set(request.body.newValues)
-        .then(Emit.optionsUpdated);
-    case CoreMessageType.OPTIONS_RESET:
-      return browser.storage.local.clear().then(Emit.optionsUpdated);
-    case CoreMessageType.RELOAD:
+        .clear()
+        .then(() => CoreActions.optionsUpdated);
+    case CoreMessageType.EXTENSION_RELOAD_REQUEST:
       reset();
       break;
     default:
@@ -93,29 +120,30 @@ const optionsListener: Listener = (requestObj, sender) => {
   }
 };
 
-export let listeners: Listener[] = [optionsListener];
+const coreListeners = [optionsListener];
+export let listeners: Listener[] = coreListeners;
 
 export const registerListener = (l: Listener) => {
   listeners.push(l);
 };
 
 export const unregisterListener = (toRemove: Listener) => {
-  listeners = listeners.filter(l => l !== toRemove);
+  listeners = listeners.filter((l) => l !== toRemove);
 };
 
 export const clearListeners = () => {
-  listeners = [optionsListener];
+  listeners = coreListeners;
 };
 
 export const listen = () => {
-  listeners.forEach(l => {
+  listeners.forEach((l) => {
     browser.runtime.onMessage.removeListener(l);
     browser.runtime.onMessage.addListener(l);
   });
 };
 
 export const stop = () => {
-  listeners.forEach(l => {
+  listeners.forEach((l) => {
     browser.runtime.onMessage.removeListener(l);
   });
 };

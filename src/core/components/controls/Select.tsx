@@ -1,61 +1,64 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 import { IOptionControl } from "@src/core/components/controls";
 import { OptionsContext } from "@src/core/components/OptionsPageContainer";
 import { CoreActions } from "@src/core/messaging";
+import { isValidOptionKey } from "@src/core/options/ui";
 
-const styles = require("../photon.scss");
-
-export interface ISelectProps extends IOptionControl {
-  options: any[];
+export interface ISelectProps extends IOptionControl<HTMLSelectElement> {
+  options: { label?: ReactNode; value: string }[];
 }
 
-export class Select extends React.Component<ISelectProps, {}> {
-  public render() {
-    const id = String(this.props.name);
+export const Select: React.FC<ISelectProps> = (props) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { badge, labelEl, ...passdown } = props;
 
-    return (
-      <OptionsContext.Consumer>
-        {ctx => {
-          if (ctx.options == null) {
-            return;
-          }
-          const value = ctx.options[this.props.name];
+  return (
+    <OptionsContext.Consumer>
+      {(ctx) => {
+        if (ctx.options == null) {
+          return;
+        }
 
-          return (
-            <div className={styles.row}>
-              <label htmlFor={id}>
-                <select
-                  {...this.props}
-                  id={id}
-                  value={value as string}
-                  className={styles.select}
-                  onClick={evt => {
-                    if (this.props.onClick) {
-                      this.props.onClick(evt);
-                    }
-                  }}
-                  onChange={(evt: React.ChangeEvent<HTMLSelectElement>) => {
-                    CoreActions.optionsUpdate({ [id]: evt.target.value });
-                    if (this.props.onChange) {
-                      this.props.onChange(evt);
-                    }
-                  }}
-                >
-                  {this.props.options.map(opt => (
-                    <option value={opt.value} key={opt.value}>
-                      {opt.label || opt.value}
-                    </option>
-                  ))}
-                </select>
-                <span className={styles.label}>{this.props.label}</span>
-                {this.props.badge}
-                {this.props.children}
-              </label>
-            </div>
-          );
-        }}
-      </OptionsContext.Consumer>
-    );
-  }
-}
+        if (!isValidOptionKey(props.name)) {
+          return `Unlinked Textarea: ${props.name}`;
+        }
+        const value = ctx.options[props.name];
+        const id = props.name;
+
+        return (
+          <div className="row">
+            <label htmlFor={id}>
+              <select
+                {...passdown}
+                id={id}
+                value={value.value as string}
+                className="select"
+                onClick={(evt) => {
+                  if (props.onClick) {
+                    props.onClick(evt);
+                  }
+                }}
+                onChange={(evt: React.ChangeEvent<HTMLSelectElement>) => {
+                  CoreActions.optionsUpdate({ [id]: evt.target.value });
+                  if (props.onChange) {
+                    props.onChange(evt);
+                  }
+                }}
+              >
+                {props.options.map((opt) => (
+                  <option value={opt.value} key={opt.value}>
+                    {opt.label || opt.value}
+                  </option>
+                ))}
+              </select>
+              <span className="label">{props.labelEl}</span>
+              {props.badge}
+              {props.children}
+            </label>
+          </div>
+        );
+      }}
+    </OptionsContext.Consumer>
+  );
+};

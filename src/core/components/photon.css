@@ -38,14 +38,6 @@ a:active,
 }
 
 a.external,
-.link.external {
-  padding-right: 16px;
-  background-image: url(i/open-in-new-16.svg);
-  background-size: auto 60%;
-  background-position: right center;
-  background-repeat: no-repeat;
-}
-
 * {
   font-family: var(--font-stack);
   line-height: 1.3;
@@ -108,6 +100,10 @@ hr {
   margin: 32px 0 0 0;
 }
 
+*:disabled {
+  cursor: not-allowed;
+}
+
 .label {
   font-size: 15px;
   margin-bottom: 4px;
@@ -118,12 +114,7 @@ hr {
   user-select: none;
 }
 
-.li {
-  margin-bottom: 4px;
-}
-
 .textbox {
-  max-width: 80px;
   padding: 4px;
   outline: solid 2px rgba(0, 0, 0, 0);
 }
@@ -138,11 +129,6 @@ hr {
 
 .select {
   padding: 4px;
-}
-
-.td {
-  padding: 0 8px;
-  line-height: 1.6;
 }
 
 .button {
@@ -165,55 +151,11 @@ hr {
   background-color: var(--grey40);
 }
 
-.button.puffy {
-  color: white;
-  background-color: var(--blue60);
-  margin-top: 16px;
-  padding: 16px;
-  border-radius: 4px;
-  border: none;
-  text-align: center;
-}
-
-.button.puffy:hover {
-  background-color: var(--blue70);
-}
-
-.button.puffy:active {
-  background-color: var(--blue80);
-}
-
-.infoBar {
+.infobar {
   border-radius: 4px;
   padding: 8px 16px;
   color: black;
-  background-color: rgb(241, 243, 217);
-}
-
-.hide {
-  display: none !important;
-}
-
-.show {
-  display: block !important;
-}
-
-.chromeOnly {
-  display: none;
-  background-color: rgb(165, 249, 168);
-  padding: 12px;
-  margin: 0 0 8px 0;
-  border-radius: 2px;
-}
-
-.caption {
-  font-size: 13px;
-  font-weight: 400;
-}
-
-.captionLine {
-  margin-top: 4px;
-  margin-left: 32px;
+  background-color: var(--yellow50);
 }
 
 .floatRight {
@@ -234,10 +176,6 @@ hr {
   background-color: var(--yellow50);
 }
 
-.firefox.badge {
-  background-color: var(--orange50);
-}
-
-.row {
-  margin-bottom: 4px;
+.row ~ .row {
+  margin: 4px 0;
 }
