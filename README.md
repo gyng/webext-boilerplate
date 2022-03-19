@@ -26,12 +26,17 @@ git remote add origin <YOUR_ORIGIN>
 
 ## Develop
 
+```mermaid
+flowchart LR
+    Source -->|yarn d:esbuild| B["JS in /dist"] --> |yarn d:webext| Browser
+```
+
 You will need to run both `WATCH=1 d:esbuild` and `d:webext` at the same time.
 
 ```
 yarn install
-yarn d:webpack       # Start the webpack watcher (TS > JS)
-yarn d:webext        # Start the web-ext watcher (JS > Firefox)
+yarn d:esbuild       # Start the webpack watcher (TS > JS)
+yarn d:webext        # Start the web-ext watcher (JS > Browser)
 
 yarn d:noenv         # Starts web-ext without extra env variables (for use with Windows)
 yarn d:locale:en     # Starts web-ext in en-US locale (this is bugged in Firefox still)
@@ -48,6 +53,15 @@ yarn test:watch
 
 ### Quickstart
 
+```mermaid
+graph
+    L[(browser.storage)] --- |load, store options| B
+    B["Background script<br />(always running)"] --- |Get, set options| O
+    O[Options UI]
+    C["Content script<br />(DOM access, specific sites; eg, www.example.com)"]
+    B --- |Custom message| C
+```
+
 Define your options in `src/schema.ts`, and then create a React component in `src/options/components/OptionsPage.tsx` with the `name` property set to the option name as defined in `schema.ts`. The option should be automatically bound once this is done.
 
 - Background script is in `src/background`
@@ -57,6 +71,15 @@ Define your options in `src/schema.ts`, and then create a React component in `sr
 - Change permissions in `manifest.json`. If you're getting weird errors make sure your permissions are correct!
 
 ## Build
+
+```mermaid
+flowchart
+    S[Typescript source code] -->|yarn d:esbuild| Dist["JS in /dist"] --> |yarn d:webext| Browser[Dev browser]
+    S -->|yarn d:esbuild| OptionsHTML
+    OptionsHTML[Options HTML file<br /><code>/dist/index-*.html</code>] --> |copystatic.sh| Dist
+    Locale[Locale files] --> |yarn gen:tl-key| S
+    Dist --> |yarn package| ZIP[Extension ZIP]
+```
 
 Bundles your code into .js files in `/dist`:
 
