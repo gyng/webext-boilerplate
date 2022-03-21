@@ -100,7 +100,7 @@ Unminified packages are slower and larger (especially for React), but allows hum
 
 - Due to the esbuild setup, the options entrypoint in `/dist/index-{somehash}.html` is manually copied over using at the package step using `copystatic.sh`.
 
-- To add new localisation strings, edit `_locales/en/messages.json`. Once done, run `yarn gen:tl-key` to create TS typedefinitions for you new i18n keys for typechecking.
+- To add new localisation strings, edit `_locales/en/messages.json`. Once done, run `yarn gen:tl-key` to create TS typedefinitions for you new i18n keys for typechecking. To check, run `d:locale:ja` (create new scripts in `package.json` as needed).
 
 - CSS can be bundled by importing the css and the adding a reference to it in the code (eg, `import a from "./a.css"; console.log(a);`)
 

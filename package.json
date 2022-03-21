@@ -13,6 +13,7 @@
     "d:nightly:win": "web-ext run --firefox=\"C:/Program Filesc/Nightly/firefox.exe\" --config=.web-ext-config.js",
     "d:esbuild": "cross-env WATCH=1 yarn build:esbuild",
     "d:locale:en": "yarn d:webext --pref intl.locale.requested=en --pref intl.locale.matchOS=false",
+    "d:locale:ja": "yarn d:webext --pref intl.locale.requested=ja --pref intl.locale.matchOS=false",
     "d:nightly": "yarn web-ext run --firefox=nightly",
     "lint": "yarn tsc:check && yarn lint:webext && yarn lint:prettier && yarn lint:eslint",
     "lint:webext": "web-ext lint",
