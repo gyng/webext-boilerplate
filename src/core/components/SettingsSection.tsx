@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button, ExportSettingsButton } from "@src/core/components/controls";
-import { CoreMessageType, isOwnMessage } from "@src/core/messaging";
+import { CoreMessageType, isOwnMessage } from "@src/core/coreMessaging";
 import { importSettings, resetSettings } from "@src/core/options/ui";
 import { TL } from "@src/tl";
 

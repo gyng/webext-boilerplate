@@ -5,7 +5,7 @@ import {
   listeners,
   registerListener,
   stop,
-} from "@src/core/messaging";
+} from "@src/core/coreMessaging";
 
 export const init = (additionalListeners?: Listener[]) => {
   if (additionalListeners) {

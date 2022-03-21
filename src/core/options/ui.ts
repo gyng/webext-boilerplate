@@ -1,5 +1,5 @@
 import { BROWSERS, getBrowser } from "@src/core/browser-detector";
-import { CoreActions } from "@src/core/messaging";
+import { CoreActions } from "@src/core/coreMessaging";
 import { Options } from "@src/schema";
 
 export const exportSettings = CoreActions.optionsGet().then((options) => {
@@ -53,5 +53,5 @@ export const resetSettings = () => {
 };
 
 export function isValidOptionKey(key: string): key is keyof Options {
-  return key in Options;
+  return key in new Options();
 }

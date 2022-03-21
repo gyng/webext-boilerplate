@@ -25,6 +25,8 @@
     "tsc:check": "tsc --noEmit --skipLibCheck"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.4",
     "@types/chrome": "0.0.180",
     "@types/jest": "27.4.1",
     "@types/react": "17.0.40",

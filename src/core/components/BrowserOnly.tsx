@@ -8,14 +8,16 @@ export interface IBrowserOnlyProps {
 }
 
 export const BrowserOnly: React.FC<IBrowserOnlyProps> = (props) => {
-  const [currentBrowser, setCurrentBrowser] = React.useState<BROWSERS>(
-    BROWSERS.UNKNOWN
+  const [currentBrowser, setCurrentBrowser] = React.useState<BROWSERS | null>(
+    null
   );
   React.useEffect(() => {
     getBrowser().then((currentBrowser) => {
       setCurrentBrowser(currentBrowser);
     });
   }, []);
+
+  console.log(props.browser, currentBrowser);
 
   const disabled = props.browser !== currentBrowser;
   const badge = {
@@ -24,5 +26,7 @@ export const BrowserOnly: React.FC<IBrowserOnlyProps> = (props) => {
     [BROWSERS.UNKNOWN]: null,
   }[props.browser];
 
-  return React.cloneElement(props.children, { disabled, badge });
+  return currentBrowser
+    ? React.cloneElement(props.children, { disabled, badge })
+    : null;
 };

@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 
 import { IOptionControl } from "@src/core/components/controls";
 import { OptionsContext } from "@src/core/components/OptionsPageContainer";
-import { CoreActions } from "@src/core/messaging";
+import { CoreActions } from "@src/core/coreMessaging";
 import { isValidOptionKey } from "@src/core/options/ui";
 
 export interface ISelectProps extends IOptionControl<HTMLSelectElement> {
@@ -17,7 +17,7 @@ export const Select: React.FC<ISelectProps> = (props) => {
     <OptionsContext.Consumer>
       {(ctx) => {
         if (ctx.options == null) {
-          return;
+          return "Options not loaded";
         }
 
         if (!isValidOptionKey(props.name)) {
@@ -32,6 +32,7 @@ export const Select: React.FC<ISelectProps> = (props) => {
               <select
                 {...passdown}
                 id={id}
+                data-testid={id}
                 value={value.value as string}
                 className="select"
                 onClick={(evt) => {

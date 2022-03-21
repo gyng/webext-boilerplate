@@ -7,14 +7,9 @@ import {
   makeMessage,
   registerListener,
   unregisterListener,
-} from "@src/core/messaging";
+} from "@src/core/coreMessaging";
 
 describe("core messaging", () => {
-  beforeAll(() => {
-    // @ts-expect-error crypto for test
-    global.crypto = require("crypto");
-  });
-
   describe("makeMessage", () => {
     beforeEach(() => {
       // @ts-expect-error for test

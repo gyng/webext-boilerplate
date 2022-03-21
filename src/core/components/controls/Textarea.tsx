@@ -2,7 +2,7 @@ import React from "react";
 
 import { IOptionControl } from "@src/core/components/controls";
 import { OptionsContext } from "@src/core/components/OptionsPageContainer";
-import { CoreActions } from "@src/core/messaging";
+import { CoreActions } from "@src/core/coreMessaging";
 import { isValidOptionKey } from "@src/core/options/ui";
 
 export const Textarea: React.FC<IOptionControl<HTMLTextAreaElement>> = (
@@ -14,7 +14,7 @@ export const Textarea: React.FC<IOptionControl<HTMLTextAreaElement>> = (
     <OptionsContext.Consumer>
       {(ctx) => {
         if (ctx.options == null) {
-          return;
+          return "Options not loaded";
         }
         if (!isValidOptionKey(props.name)) {
           return `Unlinked Textarea: ${props.name}`;
@@ -28,6 +28,7 @@ export const Textarea: React.FC<IOptionControl<HTMLTextAreaElement>> = (
               <span className="label">{labelEl}</span>
               {badge}
               <textarea
+                data-testid={id}
                 {...passdown}
                 className="textarea"
                 id={id}

@@ -6,7 +6,7 @@ import {
   CoreActions,
   CoreMessageType,
   isOwnMessage,
-} from "@src/core/messaging";
+} from "@src/core/coreMessaging";
 import { TL } from "@src/tl";
 import { Options } from "@src/schema";
 

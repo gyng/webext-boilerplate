@@ -21,6 +21,7 @@ export const ExportSettingsButton: React.FC = () => {
             exportSettings.then((kv) => setState({ kv }));
           }}
           style={{ marginLeft: "8px" }}
+          data-testid="export-button"
         >
           {TL.oExportSettings}
         </Button>

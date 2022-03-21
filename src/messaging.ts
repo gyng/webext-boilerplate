@@ -1,4 +1,4 @@
-import { isOwnMessage, MessageBase } from "@src/core/messaging";
+import { isOwnMessage, MessageBase } from "@src/core/coreMessaging";
 
 export enum MyMessageTypes {
   ECHO = "ECHO",
@@ -35,19 +35,18 @@ export const makeMyMessage = (
   } as MyMessage;
 };
 
-const myBackgroundListener: browser.runtime.onMessageVoid = (request) => {
-  if (!isMyMessage(request)) {
+export const myBackgroundListener:
+  | browser.runtime.onMessagePromise
+  | browser.runtime.onMessageVoid = (message: object) => {
+  if (!isMyMessage(message)) {
     return;
   }
 
-  switch (request.type) {
+  switch (message.type) {
     case MyMessageTypes.ECHO:
-      console.log(
-        "In background script: Received a message from background or content script!",
-        request
-      );
+      console.log("In background script: Received a message!", message);
       // Typically, web extension APIs return Promises
-      return new Promise((resolve) => resolve(request.body.value));
+      return new Promise((resolve) => resolve(message.body.value));
     default:
       break;
   }
@@ -58,7 +57,7 @@ const myBackgroundListener: browser.runtime.onMessageVoid = (request) => {
 export const myListeners = [myBackgroundListener];
 
 export const MyActions = {
-  foo: (value: string) =>
+  echo: (value: string) =>
     browser.runtime.sendMessage(
       makeMyMessage({ type: MyMessageTypes.ECHO, body: { value } })
     ),

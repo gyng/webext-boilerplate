@@ -5,6 +5,16 @@
 const esbuild = require("esbuild");
 const { execSync } = require("child_process");
 
+const tryCopyStatic = () => {
+  try {
+    execSync("bash ./copystatic.sh");
+  } catch (err) {
+    console.warn(
+      "copystatic.sh failed; manually copy dist/index-*.html to dist/src/options/index.html to update options page"
+    );
+  }
+};
+
 esbuild
   .build({
     entryPoints: [
@@ -26,16 +36,14 @@ esbuild
     watch: process.env["WATCH"]
       ? {
           onRebuild: () => {
-            try {
-              execSync("bash ./copystatic.sh");
-            } catch (err) {
-              console.warn(
-                "copystatic.sh failed; manually copy dist/index-*.html to dist/src/options/index.html to update options page"
-              );
-            }
+            tryCopyStatic();
             console.log(`Rebuilt @ ${new Date().toISOString()};`);
           },
         }
       : false,
+  })
+  .then(() => {
+    tryCopyStatic();
+    console.log(`Built @ ${new Date().toISOString()};`);
   })
   .catch(() => process.exit(1));

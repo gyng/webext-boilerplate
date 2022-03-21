@@ -2,7 +2,7 @@ import React from "react";
 
 import { IOptionControl } from "@src/core/components/controls";
 import { OptionsContext } from "@src/core/components/OptionsPageContainer";
-import { CoreActions } from "@src/core/messaging";
+import { CoreActions } from "@src/core/coreMessaging";
 import { isValidOptionKey } from "@src/core/options/ui";
 
 export const Textbox: React.FC<IOptionControl<HTMLInputElement>> = (props) => {
@@ -12,7 +12,7 @@ export const Textbox: React.FC<IOptionControl<HTMLInputElement>> = (props) => {
     <OptionsContext.Consumer>
       {(ctx) => {
         if (ctx.options == null) {
-          return;
+          return "Options not loaded";
         }
 
         if (!isValidOptionKey(props.name)) {
@@ -25,6 +25,7 @@ export const Textbox: React.FC<IOptionControl<HTMLInputElement>> = (props) => {
           <div className="row">
             <label htmlFor={id}>
               <input
+                data-testid={id}
                 {...passdown}
                 className="textbox"
                 type="text"
