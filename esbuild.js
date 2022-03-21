@@ -7,7 +7,7 @@ const { execSync } = require("child_process");
 
 const tryCopyStatic = () => {
   try {
-    execSync("bash ./copystatic.sh");
+    execSync("sh ./copystatic.sh");
   } catch (err) {
     console.warn(
       "copystatic.sh failed; manually copy dist/index-*.html to dist/src/options/index.html to update options page"

@@ -5,7 +5,7 @@
   "scripts": {
     "build": "yarn build:esbuild",
     "build:release": "yarn test && yarn lint && yarn build && yarn:package",
-    "build:esbuild": "node esbuild.js --bundle --sourcemap && bash ./copystatic.sh",
+    "build:esbuild": "node esbuild.js --bundle --sourcemap && sh ./copystatic.sh",
     "gen:tl-key": "node gen-tl-key.js > src/tl.ts",
     "d:webext": "web-ext run --watch-file ./dist/**/*.{js,css,html} --verbose --start-url about:debugging --start-url about:addons --start-url https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API --start-url https://en.wikipedia.org",
     "d:noenv": "env -u WEB_EXT_API_KEY -u WEB_EXT_API_SECRET yarn d",
@@ -19,7 +19,7 @@
     "lint:webext": "web-ext lint",
     "lint:eslint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0",
     "lint:prettier": "yarn prettier --check .",
-    "package": "bash ./copystatic.sh && env -u WEB_EXT_API_KEY -u WEB_EXT_API_SECRET web-ext build --overwrite-dest -i test docs yarn.lock",
+    "package": "sh ./copystatic.sh && env -u WEB_EXT_API_KEY -u WEB_EXT_API_SECRET web-ext build --overwrite-dest -i test docs yarn.lock",
     "test:watch": "jest --watch",
     "test": "jest",
     "tsc:check:no-error": "tsc --noEmit --skipLibCheck || true",

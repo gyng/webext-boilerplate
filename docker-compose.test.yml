@@ -1,0 +1,7 @@
+version: "3"
+
+services:
+  tester:
+    build:
+      context: "."
+    command: sh build-and-test.sh

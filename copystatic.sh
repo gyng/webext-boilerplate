@@ -1,5 +1,5 @@
-#! /bin/bash
+#!/bin/sh
 
-set euox -pipefail
+set -eu
 
 find dist -name "index-*.html" -exec mv '{}' dist/src/options/index.html \;
