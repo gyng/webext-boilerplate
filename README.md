@@ -74,9 +74,7 @@ Define your options in `src/schema.ts`, and then create a React component in `sr
 
 ```mermaid
 flowchart
-    S[Typescript source code] -->|yarn d:esbuild| Dist["JS in /dist"] --> |yarn d:webext| Browser[Dev browser]
-    S -->|yarn d:esbuild| OptionsHTML
-    OptionsHTML[Options HTML file<br /><code>/dist/index-*.html</code>] --> |copystatic.sh (auto)| Dist
+    S[Typescript source code] -->|yarn d:esbuild| Dist["JS + HTML + CSS in /dist"] --> |yarn d:webext| Browser[Dev browser]
     Locale[Locale files] --> |yarn gen:tl-key| S
     Dist --> |yarn package| ZIP[Extension ZIP]
 ```
