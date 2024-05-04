@@ -9,7 +9,7 @@ It includes a basic setup for:
 - Testing (jest, GHA)
 - Linting (eslint, web-ext)
 - Building (esbuild, web-ext)
-- Options management across content and background scripts (`src/core/options`)
+- Options management across content and background scripts/service worker (`src/core/options`)
 - Options frontend using React, with localisation support
 - A messaging setup between background script, content script, and options page (`src/core/messaging.ts`, `src/listeners.ts`)
 - Chrome polyfill for compatibility across Firefox and Chrome
@@ -56,7 +56,7 @@ npm run test:watch
 ```mermaid
 graph
     L[(browser.storage)] --- |load, store options| B
-    B["Background script<br />(always running)"] --- |Get, set options| O
+    B["Background script or service worker<br />(always running)"] --- |Get, set options| O
     O[Options UI]
     C["Content script<br />(DOM access, specific sites; eg, www.example.com)"]
     B --- |Custom message| C
@@ -64,7 +64,7 @@ graph
 
 Define your options in `src/schema.ts`, and then create a React component in `src/options/components/OptionsPage.tsx` with the `name` property set to the option name as defined in `schema.ts`. The option should be automatically bound once this is done.
 
-- Background script is in `src/background`
+- Background script/service worker is in `src/background`
 - Content script is in `src/content`
 - Options page is in `src/options/components/OptionsPage.tsx`
 - Create your own messaging actions and listener in `src/messaging.ts`. You should not have to touch core messaging used for options saving in `src/core/messaging.ts`.
