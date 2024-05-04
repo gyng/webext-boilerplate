@@ -5,7 +5,7 @@ RUN apk update \
 
 WORKDIR /usr/src/app
 
-COPY package.json pacakage-lock.json /usr/src/app/
+COPY package.json package-lock.json /usr/src/app/
 RUN npm ci
 
 ARG NODE_ENV=production
