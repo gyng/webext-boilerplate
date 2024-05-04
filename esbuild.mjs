@@ -9,7 +9,7 @@ const tryCopyStatic = () => {
     execSync("sh ./copystatic.sh");
   } catch (err) {
     console.warn(
-      "copystatic.sh failed; manually copy dist/index-*.html to dist/src/options/index.html to update options page"
+      "copystatic.sh failed; manually copy dist/index-*.html to dist/src/options/index.html to update options page",
     );
   }
 };

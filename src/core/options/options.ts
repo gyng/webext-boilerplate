@@ -79,7 +79,7 @@ export const loadOptions = (schema: Options): Promise<Options> =>
 
 export const saveOptions = (
   options: OptionKV,
-  schema = Options
+  schema = Options,
 ): Promise<void> => {
   const kv: Record<string, string> = {};
 
@@ -87,8 +87,8 @@ export const saveOptions = (
     if (!Object.keys(new Options()).includes(key)) {
       console.warn(
         `Setting option "${key}", but it is not in the schema ${Object.keys(
-          Options
-        )}!`
+          Options,
+        )}!`,
       );
     }
     // @ts-expect-error just trying our luck

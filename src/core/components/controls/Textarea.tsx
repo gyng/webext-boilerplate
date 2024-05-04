@@ -6,7 +6,7 @@ import { CoreActions } from "@src/core/coreMessaging";
 import { isValidOptionKey } from "@src/core/options/ui";
 
 export const Textarea: React.FC<IOptionControl<HTMLTextAreaElement>> = (
-  props
+  props,
 ) => {
   const { badge, labelEl, ...passdown } = props;
 

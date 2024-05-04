@@ -9,7 +9,7 @@ export interface IBrowserOnlyProps {
 
 export const BrowserOnly: React.FC<IBrowserOnlyProps> = (props) => {
   const [currentBrowser, setCurrentBrowser] = React.useState<BROWSERS | null>(
-    null
+    null,
   );
   React.useEffect(() => {
     getBrowser().then((currentBrowser) => {

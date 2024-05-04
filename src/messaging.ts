@@ -26,7 +26,7 @@ export function isMyMessage(request: any): request is MyMessage {
 
 export const makeMyMessage = (
   opts: MyMessageSchema & Partial<MessageBase>,
-  replyingTo?: MessageBase
+  replyingTo?: MessageBase,
 ): MyMessage => {
   return {
     type: opts.type,
@@ -59,7 +59,7 @@ export const myListeners = [myBackgroundListener];
 export const MyActions = {
   echo: (value: string) =>
     browser.runtime.sendMessage(
-      makeMyMessage({ type: MyMessageTypes.ECHO, body: { value } })
+      makeMyMessage({ type: MyMessageTypes.ECHO, body: { value } }),
     ),
   toCurrentTab: (message: string) =>
     browser.tabs.query({ currentWindow: true }).then((tabs) => {
@@ -69,7 +69,7 @@ export const MyActions = {
           makeMyMessage({
             type: MyMessageTypes.ECHO,
             body: { value: message },
-          })
+          }),
         );
       });
     }),

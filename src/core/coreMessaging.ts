@@ -41,7 +41,7 @@ export type Message = CoreMessageSchema & MessageBase;
 
 export const makeMessage = (
   opts: CoreMessageSchema & Partial<MessageBase>,
-  replyingTo?: MessageBase
+  replyingTo?: MessageBase,
 ): Message => {
   return {
     type: opts.type,
@@ -75,7 +75,7 @@ export const CoreActions = {
         makeMessage({
           type: CoreMessageType.OPTIONS_UPDATE_SUCCESS,
           body: { options },
-        })
+        }),
       );
     }),
   optionsReset: () => {
@@ -84,7 +84,7 @@ export const CoreActions = {
         makeMessage({
           type: CoreMessageType.EXTENSION_RELOAD_REQUEST,
           body: null,
-        })
+        }),
       );
     });
   },
@@ -94,7 +94,7 @@ export const CoreActions = {
         makeMessage({
           type: CoreMessageType.OPTIONS_UPDATE_REQUEST,
           body: { newValues },
-        })
+        }),
       );
     });
   },
@@ -104,7 +104,7 @@ export type Listener = any;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const optionsListener: unknown = (
-  request: object
+  request: object,
   // sender: browser.runtime.MessageSender,
   // sendResponse: (response: object) => boolean | Promise<void> | void
 ) => {

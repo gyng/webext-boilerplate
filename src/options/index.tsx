@@ -17,6 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
   root.render(
     <OptionsPageContainer>
       <OptionsPage />
-    </OptionsPageContainer>
+    </OptionsPageContainer>,
   );
 });
