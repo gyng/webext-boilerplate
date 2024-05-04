@@ -4,7 +4,7 @@ import { isMyMessage, MyActions, MyMessageTypes } from "@src/messaging";
 
 // Wrapped in an IIFE to avoid contaminating host site
 (function contentScript() {
-  const myContentListener: browser.runtime.onMessageVoid = (message) => {
+  const myContentListener: unknown = (message: any) => {
     if (!isMyMessage(message)) {
       return;
     }

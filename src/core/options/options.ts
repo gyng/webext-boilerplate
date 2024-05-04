@@ -1,3 +1,5 @@
+import browser from "webextension-polyfill";
+
 import { Options } from "@src/schema";
 
 export type OptionsKeys = keyof Options;
@@ -79,7 +81,7 @@ export const saveOptions = (
   options: OptionKV,
   schema = Options
 ): Promise<void> => {
-  const kv: browser.storage.StorageObject = {};
+  const kv: Record<string, string> = {};
 
   Object.entries(options).forEach(([key, val]) => {
     if (!Object.keys(new Options()).includes(key)) {
@@ -96,5 +98,17 @@ export const saveOptions = (
     kv[key] = ser(val);
   });
 
+  return browser.storage.local.set(kv).catch(console.error);
+};
+
+export const resetOptions = (schema = Options): Promise<void> => {
+  const defaults = new schema();
+  const keys = getKeys(defaults);
+  const kv: Record<string, string | boolean | undefined> = {};
+  keys.forEach((key) => {
+    if (defaults[key]?.value) {
+      kv[key] = defaults[key].value;
+    }
+  });
   return browser.storage.local.set(kv).catch(console.error);
 };

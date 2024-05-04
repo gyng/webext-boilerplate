@@ -1,3 +1,5 @@
+import browser from "webextension-polyfill";
+
 import { init, reset } from "@src/core";
 import { Listener } from "@src/core/coreMessaging";
 import { myBackgroundListener } from "@src/messaging";

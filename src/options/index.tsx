@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -12,10 +12,11 @@ import { OptionsPageContainer } from "@src/core/components/OptionsPageContainer"
 import { OptionsPage } from "@src/options/components/OptionsPage";
 
 document.addEventListener("DOMContentLoaded", () => {
-  ReactDOM.render(
+  const container = document.getElementById("root");
+  const root = createRoot(container!);
+  root.render(
     <OptionsPageContainer>
       <OptionsPage />
-    </OptionsPageContainer>,
-    document.getElementById("root")
+    </OptionsPageContainer>
   );
 });

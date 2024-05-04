@@ -1,3 +1,5 @@
+import browser from "webextension-polyfill";
+
 import { getKeys, loadOptions, saveOptions, SchemataItem } from "./options";
 
 export class TestOptions {
@@ -35,7 +37,6 @@ describe("options management", () => {
     storage = {};
     browser.storage.local.get = () => {
       return new Promise((resolve) => {
-        // @ts-expect-error test mock
         resolve(storage);
       });
     };

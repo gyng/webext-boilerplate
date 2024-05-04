@@ -1,5 +1,12 @@
+import browser from "webextension-polyfill";
+
 import { reset } from "@src/core";
-import { loadOptions, OptionKV, saveOptions } from "@src/core/options";
+import {
+  loadOptions,
+  OptionKV,
+  resetOptions,
+  saveOptions,
+} from "@src/core/options";
 import { Options } from "@src/schema";
 
 export enum CoreMessageType {
@@ -72,27 +79,31 @@ export const CoreActions = {
       );
     }),
   optionsReset: () => {
-    return browser.runtime.sendMessage(
-      makeMessage({
-        type: CoreMessageType.EXTENSION_RELOAD_REQUEST,
-        body: null,
-      })
-    );
+    return resetOptions().then(() => {
+      browser.runtime.sendMessage(
+        makeMessage({
+          type: CoreMessageType.EXTENSION_RELOAD_REQUEST,
+          body: null,
+        })
+      );
+    });
   },
   optionsUpdate: (newValues: OptionKV) => {
-    browser.runtime.sendMessage(
-      makeMessage({
-        type: CoreMessageType.OPTIONS_UPDATE_REQUEST,
-        body: { newValues },
-      })
-    );
+    saveOptions(newValues).then(() => {
+      browser.runtime.sendMessage(
+        makeMessage({
+          type: CoreMessageType.OPTIONS_UPDATE_REQUEST,
+          body: { newValues },
+        })
+      );
+    });
   },
 };
 
-export type Listener = browser.runtime.onMessageEvent;
+export type Listener = any;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const optionsListener: browser.runtime.onMessageVoid = (
+const optionsListener: unknown = (
   request: object
   // sender: browser.runtime.MessageSender,
   // sendResponse: (response: object) => boolean | Promise<void> | void

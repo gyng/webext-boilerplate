@@ -8,7 +8,7 @@ describe("OptionsPageContainer", () => {
     render(
       <OptionsPageContainer>
         <Checkbox name="foo" />
-      </OptionsPageContainer>
+      </OptionsPageContainer>,
     );
     expect(await screen.findByTestId("foo")).toBeTruthy();
   });
@@ -17,10 +17,10 @@ describe("OptionsPageContainer", () => {
     render(
       <OptionsPageContainer>
         <Checkbox name="not-a-key" />
-      </OptionsPageContainer>
+      </OptionsPageContainer>,
     );
     expect(
-      await screen.findByText("Unlinked Checkbox: not-a-key")
+      await screen.findByText("Unlinked Checkbox: not-a-key"),
     ).toBeTruthy();
   });
 });

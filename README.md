@@ -4,7 +4,7 @@ This TypeScript boilerplate is a quick start for creating a browser web extensio
 
 It includes a basic setup for:
 
-- WebExtension structure and required files
+- Manifest v3 WebExtension structure and required files
 - Typescript
 - Testing (jest, GHA)
 - Linting (eslint, web-ext)
@@ -107,6 +107,11 @@ Unminified packages are slower and larger (especially for React), but allows hum
 - Firefox: https://addons.mozilla.org/en-US/developers/addons
 - Chrome: https://chrome.google.com/webstore/developer/dashboard
 - Edge: https://developer.microsoft.com/en-us/microsoft-edge/extensions/requests/
+
+## Manifest v3
+
+- The `background.service_worker` key is not supported by Firefox while `background.scripts` is not supported by Chrome.
+- Fill in `browser_specific_settings.gecko.id` with your own ID (https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings)
 
 ## Notes for reviewers
 

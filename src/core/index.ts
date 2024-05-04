@@ -1,3 +1,5 @@
+import browser from "webextension-polyfill";
+
 import {
   clearListeners,
   listen,
@@ -17,6 +19,8 @@ export const init = (additionalListeners?: Listener[]) => {
 
 // Add any additional deregistration/cleanup needed here
 export const reset = (additionalListeners: Listener[] = listeners) => {
+  // Only needed for browser.menus: use browser.contextMenus for MV3
+  // TODO: browser.menus handling can be removed when fully on MV3
   if (browser.menus) {
     browser.menus.removeAll().then(() => {
       clearListeners();

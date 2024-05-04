@@ -1,3 +1,5 @@
+import browser from "webextension-polyfill";
+
 import { l10n } from "@vendor/l10n/l10n";
 import * as React from "react";
 
@@ -12,7 +14,7 @@ import { Options } from "@src/schema";
 
 export interface IOptionsPageContainerState {
   options: Options | null;
-  children?: React.ReactChildren;
+  children?: typeof React.Children;
 }
 
 export const OptionsContext: React.Context<{

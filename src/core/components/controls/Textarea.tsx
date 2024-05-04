@@ -17,7 +17,7 @@ export const Textarea: React.FC<IOptionControl<HTMLTextAreaElement>> = (
           return "Options not loaded";
         }
         if (!isValidOptionKey(props.name)) {
-          return `Unlinked Textarea: ${props.name}`;
+          return <div>Unlinked Textarea: props.name</div>;
         }
         const value = ctx.options[props.name];
         const id = props.name;

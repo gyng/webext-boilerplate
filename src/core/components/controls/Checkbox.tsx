@@ -16,7 +16,7 @@ export const Checkbox: React.FC<IOptionControl> = (props) => {
         }
 
         if (!isValidOptionKey(props.name)) {
-          return `Unlinked Checkbox: ${props.name}`;
+          return <div>Unlinked Checkbox: props.name</div>;
         }
         const checked = ctx.options[props.name];
         const id = props.name;

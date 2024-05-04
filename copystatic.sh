@@ -2,4 +2,4 @@
 
 set -eu
 
-find dist -name "index-*.html" -exec mv '{}' dist/src/options/index.html \;
+find dist -name "index-*.html" -exec mv '{}' dist/options/index.html \;

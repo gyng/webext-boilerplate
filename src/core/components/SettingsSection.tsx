@@ -1,15 +1,19 @@
+import browser from "webextension-polyfill";
 import React from "react";
 
-import { Button, ExportSettingsButton } from "@src/core/components/controls";
+import {
+  ExportSettingsButton,
+  ImportSettingsButton,
+} from "@src/core/components/controls";
+import { ResetSettingsButton } from "./controls/ResetSettingsButton";
 import { CoreMessageType, isOwnMessage } from "@src/core/coreMessaging";
-import { importSettings, resetSettings } from "@src/core/options/ui";
 import { TL } from "@src/tl";
 
 export const SettingsSection: React.FC = () => {
   const [lastUpdated, setLastUpdated] = React.useState<Date | null>(null);
 
   React.useEffect(() => {
-    const listener: browser.runtime.onMessageVoid = (request) => {
+    const listener = (request: any) => {
       if (!isOwnMessage(request)) {
         return;
       }
@@ -32,7 +36,7 @@ export const SettingsSection: React.FC = () => {
       <h2 id="section-more-options">
         {TL.oMoreOptions}
         <div className="floatRight">
-          <Button onClick={resetSettings}>{TL.oRestoreDefaults}</Button>
+          <ResetSettingsButton />
         </div>
       </h2>
 
@@ -43,7 +47,7 @@ export const SettingsSection: React.FC = () => {
           justifyContent: "flex-start",
         }}
       >
-        <Button onClick={importSettings}>{TL.oImportSettings}</Button>
+        <ImportSettingsButton />
         <ExportSettingsButton />
       </div>
 

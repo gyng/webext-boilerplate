@@ -1,3 +1,5 @@
+import browser from "webextension-polyfill";
+
 import { isOwnMessage, MessageBase } from "@src/core/coreMessaging";
 
 export enum MyMessageTypes {
@@ -35,9 +37,7 @@ export const makeMyMessage = (
   } as MyMessage;
 };
 
-export const myBackgroundListener:
-  | browser.runtime.onMessagePromise
-  | browser.runtime.onMessageVoid = (message: object) => {
+export const myBackgroundListener: unknown = (message: object) => {
   if (!isMyMessage(message)) {
     return;
   }
@@ -66,7 +66,10 @@ export const MyActions = {
       tabs.forEach((t) => {
         browser.tabs.sendMessage(
           t?.id ?? 0,
-          makeMyMessage({ type: MyMessageTypes.ECHO, body: { value: message } })
+          makeMyMessage({
+            type: MyMessageTypes.ECHO,
+            body: { value: message },
+          })
         );
       });
     }),

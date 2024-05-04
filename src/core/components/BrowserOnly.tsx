@@ -17,8 +17,6 @@ export const BrowserOnly: React.FC<IBrowserOnlyProps> = (props) => {
     });
   }, []);
 
-  console.log(props.browser, currentBrowser);
-
   const disabled = props.browser !== currentBrowser;
   const badge = {
     [BROWSERS.FIREFOX]: <span className="badge">Firefox</span>,

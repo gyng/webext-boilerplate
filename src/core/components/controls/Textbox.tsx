@@ -16,7 +16,7 @@ export const Textbox: React.FC<IOptionControl<HTMLInputElement>> = (props) => {
         }
 
         if (!isValidOptionKey(props.name)) {
-          return `Unlinked Textbox: ${props.name}`;
+          return <div>Unlinked Textbox: props.name</div>;
         }
         const value = ctx.options[props.name];
         const id = props.name;

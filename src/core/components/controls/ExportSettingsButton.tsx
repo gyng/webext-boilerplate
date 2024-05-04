@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
 import { Button } from "@src/core/components/controls";
-import { exportSettings } from "@src/core/options/ui";
 import { TL } from "@src/tl";
+import { CoreActions } from "@src/core/coreMessaging";
 
 export interface IExportSettingsState {
   kv?: Record<string, number | string | boolean>;
@@ -18,7 +18,14 @@ export const ExportSettingsButton: React.FC = () => {
       <div>
         <Button
           onClick={() => {
-            exportSettings.then((kv) => setState({ kv }));
+            setState({});
+            CoreActions.optionsGet().then((options) => {
+              const kv: Record<string, number | string | boolean> = {};
+              Object.entries(options).forEach(([k, v]) => {
+                kv[k] = v.value;
+              });
+              setState({ kv });
+            });
           }}
           style={{ marginLeft: "8px" }}
           data-testid="export-button"
@@ -27,16 +34,18 @@ export const ExportSettingsButton: React.FC = () => {
         </Button>
       </div>
 
-      <textarea
-        style={{
-          display: state.kv ? "block" : "none",
-          fontFamily: "monospace",
-          marginLeft: "8px",
-          marginTop: "4px",
-        }}
-        spellCheck={false}
-        defaultValue={JSON.stringify(state.kv, null, 2) || ""}
-      />
+      {state.kv ? (
+        <textarea
+          style={{
+            fontFamily: "monospace",
+            marginLeft: "8px",
+            marginTop: "4px",
+          }}
+          spellCheck={false}
+          value={JSON.stringify(state.kv, null, 2) || ""}
+          readOnly
+        />
+      ) : null}
     </div>
   );
 };

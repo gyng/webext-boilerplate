@@ -5,7 +5,7 @@ import {
 } from "@src/messaging";
 
 describe("background script", () => {
-  describe("backgruond listener", () => {
+  describe("background listener", () => {
     it("handles ECHO", async () => {
       const message = makeMyMessage({
         type: MyMessageTypes.ECHO,

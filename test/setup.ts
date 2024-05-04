@@ -1,4 +1,6 @@
 import "@testing-library/jest-dom";
+
+// @ts-ignore-error
 import { webcrypto } from "node:crypto";
 
 Object.defineProperty(globalThis, "crypto", {
