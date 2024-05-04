@@ -5,10 +5,8 @@ RUN apk update \
 
 WORKDIR /usr/src/app
 
-COPY package.json yarn.lock /usr/src/app/
-RUN yarn install --frozen-lockfile \
-    && yarn check --integrity \
-    && yarn cache clean
+COPY package.json pacakage-lock.json /usr/src/app/
+RUN npm ci
 
 ARG NODE_ENV=production
 

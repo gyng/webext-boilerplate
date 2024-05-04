@@ -16,7 +16,7 @@ It includes a basic setup for:
 
 ## Clone
 
-Requires yarn and Firefox. Clone, fork, or obtain the boilerplate somehow and then update your git remotes
+Requires npm and Firefox. Clone, fork, or obtain the boilerplate somehow and then update your git remotes
 
 ```
 git clone https://github.com/gyng/webext-boilerplate.git
@@ -28,27 +28,27 @@ git remote add origin <YOUR_ORIGIN>
 
 ```mermaid
 flowchart LR
-    Source -->|yarn d:esbuild| B["JS in /dist"] --> |yarn d:webext| Browser
+    Source -->|npm run d:esbuild| B["JS in /dist"] --> |npm run d:webext| Browser
 ```
 
 You will need to run both `WATCH=1 d:esbuild` and `d:webext` at the same time.
 
 ```
-yarn install
-yarn d:esbuild       # Start the webpack watcher (TS > JS)
-yarn d:webext        # Start the web-ext watcher (JS > Browser)
+npm run install
+npm run d:esbuild       # Start the webpack watcher (TS > JS)
+npm run d:webext        # Start the web-ext watcher (JS > Browser)
 
-yarn d:noenv         # Starts web-ext without extra env variables (for use with Windows)
-yarn d:locale:en     # Starts web-ext in en-US locale (this is bugged in Firefox still)
+npm run d:noenv         # Starts web-ext without extra env variables (for use with Windows)
+npm run d:locale:en     # Starts web-ext in en-US locale (this is bugged in Firefox still)
 ```
 
 Visit `about:debugging` and `about:extensions` in the Firefox window that just popped up.
 
 ```
-yarn lint
-yarn lint:fix
-yarn test
-yarn test:watch
+npm run lint
+npm run lint:fix
+npm run test
+npm run test:watch
 ```
 
 ### Quickstart
@@ -74,9 +74,9 @@ Define your options in `src/schema.ts`, and then create a React component in `sr
 
 ```mermaid
 flowchart
-    S[Typescript source code] -->|yarn d:esbuild| Dist["JS + HTML + CSS in /dist"] --> |yarn d:webext| Browser[Dev browser]
-    Locale[Locale files] --> |yarn gen:tl-key| S
-    Dist --> |yarn package| ZIP[Extension ZIP]
+    S[Typescript source code] -->|npm run d:esbuild| Dist["JS + HTML + CSS in /dist"] --> |npm run d:webext| Browser[Dev browser]
+    Locale[Locale files] --> |npm run gen:tl-key| S
+    Dist --> |npm run package| ZIP[Extension ZIP]
 ```
 
 Bundles your code into .js files in `/dist`:
@@ -84,21 +84,21 @@ Bundles your code into .js files in `/dist`:
 Bump the version number in `manifest.json` first.
 
 ```
-yarn build
+npm run build
 ```
 
 Takes the built files in `/dist`, and bundles + creates a package in the `web-ext-artifacts` directory:
 
 ```
-yarn build:release
-yarn build:release:minified  # This minifies and is therefore discouraged
+npm run build:release
+npm run build:release:minified  # This minifies and is therefore discouraged
 ```
 
 Unminified packages are slower and larger (especially for React), but allows human checkers to scan through the code.
 
 - Due to the esbuild setup, the options entrypoint in `/dist/index-{somehash}.html` is manually copied over using at the package step using `copystatic.sh`.
 
-- To add new localisation strings, edit `_locales/en/messages.json`. Once done, run `yarn gen:tl-key` to create TS typedefinitions for you new i18n keys for typechecking. To check, run `d:locale:ja` (create new scripts in `package.json` as needed).
+- To add new localisation strings, edit `_locales/en/messages.json`. Once done, run `npm run gen:tl-key` to create TS typedefinitions for you new i18n keys for typechecking. To check, run `d:locale:ja` (create new scripts in `package.json` as needed).
 
 - CSS can be bundled by importing the css and the adding a reference to it in the code (eg, `import a from "./a.css"; console.log(a);`)
 
@@ -112,8 +112,8 @@ Unminified packages are slower and larger (especially for React), but allows hum
 
 To build the project:
 
-1. `yarn install`
-2. `yarn build`: the output will be placed in the `dist` directory.
+1. `npm run install`
+2. `npm run build`: the output will be placed in the `dist` directory.
 
 This project includes vendored third-party libraries in addition to those defined in `package.json`
 

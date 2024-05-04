@@ -2,4 +2,4 @@
 
 set -eu
 
-yarn build && yarn package
+npm run build && npm run package

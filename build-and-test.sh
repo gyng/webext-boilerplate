@@ -2,4 +2,4 @@
 
 set -eu
 
-yarn build && yarn lint && yarn test
+npm run build && npm run lint && npm run test
