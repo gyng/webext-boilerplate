@@ -2,8 +2,6 @@ This is the default GitHub Pages setup for [webext-boilerplate](https://github.c
 
 Find me in in `docs/index.md`.
 
-You can configure your GitHub Pages setup at https://github.com/gyng/webext-boilerplate/settings/pages.
-
 ## webext-boilerplate is a WebExtension quickstart
 
 [webext-boilerplate](https://github.com/gyng/webext-boilerplate) is a quickstart repository for WebExtensions.
