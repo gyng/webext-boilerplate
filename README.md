@@ -122,7 +122,7 @@ To build the project:
 
 This project includes vendored third-party libraries in addition to those defined in `package.json`
 
-- [webextension-polyfill](https://github.com/mozilla/webextension-polyfill), obtained from [unpkg](https://unpkg.com/webextension-polyfill/dist/) as recommended by the author
+- [webextension-polyfill](https://github.com/mozilla/webextension-polyfill), obtained from npm
 - [l10n](https://github.com/piroor/webextensions-lib-l10n), modified from [source](https://github.com/piroor/webextensions-lib-l10n/blob/4b4589032ece93ea0907715f765310514f7e4aab/l10n.js)
 
 The project also includes third-party libraries obtained from npm. The list can be seen in the `dependencies` key of `package.json`.
